@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>rtree</artifactId>
-    <version>0.8.0.4</version>
+    <version>0.8.2beta-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
@@ -39,7 +39,7 @@
         <m3.site.version>3.4</m3.site.version>
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
-        <jmh.version>1.11.3</jmh.version>
+        <jmh.version>1.19</jmh.version>
 
     </properties>
 
@@ -80,7 +80,7 @@
         <connection>${scm.url}</connection>
         <developerConnection>${scm.url}</developerConnection>
         <url>${scm.url}</url>
-        <tag>0.8.0.4</tag>
+        <tag>0.6.5</tag>
     </scm>
 
     <dependencies>
@@ -256,13 +256,19 @@
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/PriorityQueue.*</exclude>
+                                <exclude>**/generated/**/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
 				</executions>
 			</plugin>
                 </plugins>

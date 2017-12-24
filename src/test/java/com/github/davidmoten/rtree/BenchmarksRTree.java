@@ -10,6 +10,7 @@ import java.util.List;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
 
 import com.github.davidmoten.rtree.fbs.SerializerFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -17,6 +18,7 @@ import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 @State(Scope.Benchmark)
@@ -26,66 +28,65 @@ public class BenchmarksRTree {
 
     private final List<Entry<Object, Rectangle>> some = entries1000();
 
-    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point> create()
+    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point>create()
             .add(entries);
 
     private final RTree<Object, Point> defaultTreeM10 = RTree.maxChildren(10)
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM4 = RTree.maxChildren(4).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM10 = RTree.maxChildren(10).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> defaultTreeM32 = RTree.maxChildren(32)
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM32 = RTree.maxChildren(32).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> defaultTreeM128 = RTree.maxChildren(128)
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM128 = RTree.maxChildren(128).star()
-            .<Object, Point> create().add(entries);
+            .<Object, Point>create().add(entries);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM4 = RTree.maxChildren(4)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM10 = RTree.maxChildren(10)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM4 = RTree.maxChildren(4).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM10 = RTree.maxChildren(10).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM32 = RTree.maxChildren(32)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM32 = RTree.maxChildren(32).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallDefaultTreeM128 = RTree.maxChildren(128)
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final RTree<Object, Rectangle> smallStarTreeM128 = RTree.maxChildren(128).star()
-            .<Object, Rectangle> create().add(some);
+            .<Object, Rectangle>create().add(some);
 
     private final byte[] byteArrayGreek = createFlatBuffersByteArrayGreek();
 
     private final RTree<Object, Point> starTreeM10FlatBuffers = createFlatBuffersGreek();
 
-
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
-        insertPoint(defaultTreeM4);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
+        return insertPoint(defaultTreeM4);
     }
 
     private byte[] createFlatBuffersByteArrayGreek() {
-        RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point> create()
+        RTree<Object, Point> tree = RTree.maxChildren(10).star().<Object, Point>create()
                 .add(entries);
         final ByteArrayOutputStream os = new ByteArrayOutputStream();
         Func1<Object, byte[]> serializer = new Func1<Object, byte[]>() {
@@ -135,198 +136,199 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeCreation010() {
-        RTree.maxChildren(10).<Object, Point> create().add(entries);
+    public RTree<Object, Point> defaultRTreeCreation010() {
+        return RTree.maxChildren(10).<Object, Point>create().add(entries);
     }
 
     @Benchmark
-    public void starRTreeCreation010() {
-        RTree.maxChildren(10).star().<Object, Point> create().add(entries);
+    public RTree<Object, Point> starRTreeCreation010() {
+        return RTree.maxChildren(10).star().<Object, Point>create().add(entries);
     }
 
     @Benchmark
-    public void flatBufferRTreeCreation010() {
-        createFlatBuffersGreek();
+    public RTree<Object, Point> flatBufferRTreeCreation010() {
+        return createFlatBuffersGreek();
     }
 
     @Benchmark
-    public void bulkLoadingRTreeCreation010() {
-        RTree.maxChildren(10).<Object, Point> create(entries);
+    public RTree<Object, Point> bulkLoadingRTreeCreation010() {
+        return RTree.maxChildren(10).<Object, Point>create(entries);
     }
 
     @Benchmark
-    public void bulkLoadingFullRTreeCreation010() {
-        RTree.maxChildren(10).loadingFactor(1.0).<Object, Point> create(entries);
+    public RTree<Object, Point> bulkLoadingFullRTreeCreation010() {
+        return RTree.maxChildren(10).loadingFactor(1.0).<Object, Point>create(entries);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren004() {
-        searchGreek(defaultTreeM4);
+    public void defaultRTreeSearchOfGreekDataPointsMaxChildren004(Blackhole bh) {
+        searchGreek(defaultTreeM4, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
-        insertPoint(defaultTreeM10);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
+        return insertPoint(defaultTreeM10);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren010() {
-        searchGreek(defaultTreeM10);
+    public void defaultRTreeSearchOfGreekDataPointsMaxChildren010(Blackhole bh) {
+        searchGreek(defaultTreeM10, bh);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
-        insertPoint(starTreeM4);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren004() {
+        return insertPoint(starTreeM4);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
-        insertPoint(starTreeM10);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren010() {
+        return insertPoint(starTreeM10);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren004() {
-        searchGreek(starTreeM4);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren004(Blackhole bh) {
+        searchGreek(starTreeM4, bh);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren010() {
-        searchGreek(starTreeM10);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010(Blackhole bh) {
+        searchGreek(starTreeM10, bh);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers() {
-        searchGreek(starTreeM10FlatBuffers);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers(Blackhole bh) {
+        searchGreek(starTreeM10FlatBuffers, bh);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure() {
-        searchGreekBackpressure(starTreeM10FlatBuffers);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffersBackpressure(
+            Blackhole bh) {
+        searchGreekBackpressure(starTreeM10FlatBuffers, bh);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure() {
-        searchGreekWithBackpressure(starTreeM10);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren010WithBackpressure(Blackhole bh) {
+        searchGreekWithBackpressure(starTreeM10, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
-        insertPoint(defaultTreeM32);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
+        return insertPoint(defaultTreeM32);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren032() {
-        searchGreek(defaultTreeM32);
+    public void defaultRTreeSearchOfGreekDataPointsMaxChildren032(Blackhole bh) {
+        searchGreek(defaultTreeM32, bh);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
-        insertPoint(starTreeM32);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren032() {
+        return insertPoint(starTreeM32);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren032() {
-        searchGreek(starTreeM32);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren032(Blackhole bh) {
+        searchGreek(starTreeM32, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
-        insertPoint(defaultTreeM128);
+    public RTree<Object, Point> defaultRTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
+        return insertPoint(defaultTreeM128);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren128() {
-        searchGreek(defaultTreeM128);
+    public void defaultRTreeSearchOfGreekDataPointsMaxChildren128(Blackhole bh) {
+        searchGreek(defaultTreeM128, bh);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
-        insertPoint(starTreeM128);
+    public RTree<Object, Point> rStarTreeInsertOneEntryIntoGreekDataEntriesMaxChildren128() {
+        return insertPoint(starTreeM128);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren128() {
-        searchGreek(starTreeM128);
+    public void rStarTreeSearchOfGreekDataPointsMaxChildren128(Blackhole bh) {
+        searchGreek(starTreeM128, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004() {
-        insertRectangle(smallDefaultTreeM4);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren004() {
+        return insertRectangle(smallDefaultTreeM4);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren004() {
-        search(smallDefaultTreeM4);
+    public void defaultRTreeSearchOf1000PointsMaxChildren004(Blackhole bh) {
+        search(smallDefaultTreeM4, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010() {
-        insertRectangle(smallDefaultTreeM10);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren010() {
+        return insertRectangle(smallDefaultTreeM10);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren010() {
-        search(smallDefaultTreeM10);
+    public void defaultRTreeSearchOf1000PointsMaxChildren010(Blackhole bh) {
+        search(smallDefaultTreeM10, bh);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren004() {
-        insertRectangle(smallStarTreeM4);
+    public RTree<Object, Rectangle> rStarTreeInsertOneEntryInto1000EntriesMaxChildren004() {
+        return insertRectangle(smallStarTreeM4);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren010() {
-        insertRectangle(smallStarTreeM10);
+    public RTree<Object, Rectangle> rStarTreeInsertOneEntryInto1000EntriesMaxChildren010() {
+        return insertRectangle(smallStarTreeM10);
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren004() {
-        search(smallStarTreeM4);
+    public void rStarTreeSearchOf1000PointsMaxChildren004(Blackhole bh) {
+        search(smallStarTreeM4, bh);
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren010() {
-        search(smallStarTreeM10);
+    public void rStarTreeSearchOf1000PointsMaxChildren010(Blackhole bh) {
+        search(smallStarTreeM10, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032() {
-        insertRectangle(smallDefaultTreeM32);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren032() {
+        return insertRectangle(smallDefaultTreeM32);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren032() {
-        search(smallDefaultTreeM32);
+    public void defaultRTreeSearchOf1000PointsMaxChildren032(Blackhole bh) {
+        search(smallDefaultTreeM32, bh);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren032() {
-        insertRectangle(smallStarTreeM32);
+    public RTree<Object, Rectangle> rStarTreeInsertOneEntryInto1000EntriesMaxChildren032() {
+        return insertRectangle(smallStarTreeM32);
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren032() {
-        search(smallStarTreeM32);
+    public void rStarTreeSearchOf1000PointsMaxChildren032(Blackhole bh) {
+        search(smallStarTreeM32, bh);
     }
 
     @Benchmark
-    public void defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128() {
-        insertRectangle(smallDefaultTreeM128);
+    public RTree<Object, Rectangle> defaultRTreeInsertOneEntryInto1000EntriesMaxChildren128() {
+        return insertRectangle(smallDefaultTreeM128);
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren128() {
-        search(smallDefaultTreeM128);
+    public void defaultRTreeSearchOf1000PointsMaxChildren128(Blackhole bh) {
+        search(smallDefaultTreeM128, bh);
     }
 
     @Benchmark
-    public void rStarTreeInsertOneEntryInto1000EntriesMaxChildren128() {
-        insertRectangle(smallStarTreeM128);
+    public RTree<Object, Rectangle> rStarTreeInsertOneEntryInto1000EntriesMaxChildren128() {
+        return insertRectangle(smallStarTreeM128);
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren128() {
-        search(smallStarTreeM128);
+    public void rStarTreeSearchOf1000PointsMaxChildren128(Blackhole bh) {
+        search(smallStarTreeM128, bh);
     }
 
     @Benchmark
@@ -335,34 +337,45 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void searchNearestGreek() {
-        searchNearestGreek(starTreeM4);
+    public void searchNearestGreek(Blackhole bh) {
+        searchNearestGreek(starTreeM4, bh);
     }
 
-    private void deleteAll(RTree<Object, Point> tree) {
-        tree.delete(entries.get(1000), true);
+    private RTree<Object, Point> deleteAll(RTree<Object, Point> tree) {
+        return tree.delete(entries.get(1000), true);
     }
 
-    private void search(RTree<Object, Rectangle> tree) {
+    private void search(RTree<Object, Rectangle> tree, Blackhole bh) {
         // returns 10 results
-        tree.search(Geometries.rectangle(500, 500, 630, 630)).subscribe();
+        tree.search(Geometries.rectangle(500, 500, 630, 630)).subscribe(consumeWith(bh));
     }
 
-    private void searchGreek(RTree<Object, Point> tree) {
+    private void searchGreek(RTree<Object, Point> tree, Blackhole bh) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe();
+        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe(consumeWith(bh));
     }
 
-    private void searchGreekBackpressure(RTree<Object, Point> tree) {
+    private Action1<Object> consumeWith(final Blackhole bh) {
+        return new Action1<Object>() {
+
+            @Override
+            public void call(Object t) {
+                bh.consume(t);
+            }
+        };
+    }
+
+    private void searchGreekBackpressure(RTree<Object, Point> tree, Blackhole bh) {
         // should return 22 results
-        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).take(1000).subscribe();
+        tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).take(1000)
+                .subscribe(consumeWith(bh));
     }
 
-    private void searchNearestGreek(RTree<Object, Point> tree) {
-        tree.nearest(Geometries.point(40.0, 27.0), 1, 300).subscribe();
+    private void searchNearestGreek(RTree<Object, Point> tree, Blackhole bh) {
+        tree.nearest(Geometries.point(40.0, 27.0), 1, 300).subscribe(consumeWith(bh));
     }
 
-    private void searchGreekWithBackpressure(RTree<Object, Point> tree) {
+    private void searchGreekWithBackpressure(RTree<Object, Point> tree, final Blackhole bh) {
         // should return 22 results
         tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)).subscribe(new Subscriber<Object>() {
 
@@ -382,24 +395,27 @@ public class BenchmarksRTree {
             }
 
             @Override
-            public void onNext(Object arg0) {
+            public void onNext(Object t) {
                 request(1);
+                bh.consume(t);
             }
         });
     }
 
-    private void insertRectangle(RTree<Object, Rectangle> tree) {
-        tree.add(new Object(), RTreeTest.random());
+    private RTree<Object, Rectangle> insertRectangle(RTree<Object, Rectangle> tree) {
+        return tree.add(new Object(), RTreeTest.random());
     }
 
-    private void insertPoint(RTree<Object, Point> tree) {
-        tree.add(new Object(), Geometries.point(Math.random() * 1000, Math.random() * 1000));
+    private RTree<Object, Point> insertPoint(RTree<Object, Point> tree) {
+        return tree.add(new Object(),
+                Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
     }
 
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         System.out.println("starting searches");
+        Blackhole bh = new Blackhole("hello");
         while (true)
-            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers();
+            b.rStarTreeSearchOfGreekDataPointsMaxChildren010FlatBuffers(bh);
     }
 }
