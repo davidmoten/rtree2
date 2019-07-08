@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
@@ -42,6 +44,7 @@ import com.github.davidmoten.rtree.internal.EntryDefault;
 import rx.Observable;
 import rx.functions.Func1;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RTreeTest {
 
     private static final double PRECISION = 0.000001;
