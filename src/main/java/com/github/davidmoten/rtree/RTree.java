@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Observable;
+import java.util.function.Predicate;
 
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
@@ -22,10 +24,6 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
 import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
-
-import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.Func2;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
@@ -490,44 +488,6 @@ public final class RTree<T, S extends Geometry> {
     }
 
     /**
-     * Returns the Observable sequence of trees created by progressively adding
-     * entries.
-     * 
-     * @param entries
-     *            the entries to add
-     * @return a sequence of trees
-     */
-    public Observable<RTree<T, S>> add(Observable<Entry<T, S>> entries) {
-        return entries.scan(this, new Func2<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
-
-            @Override
-            public RTree<T, S> call(RTree<T, S> tree, Entry<T, S> entry) {
-                return tree.add(entry);
-            }
-        });
-    }
-
-    /**
-     * Returns the Observable sequence of trees created by progressively deleting
-     * entries.
-     * 
-     * @param entries
-     *            the entries to add
-     * @param all
-     *            if true delete all matching otherwise just first matching
-     * @return a sequence of trees
-     */
-    public Observable<RTree<T, S>> delete(Observable<Entry<T, S>> entries, final boolean all) {
-        return entries.scan(this, new Func2<RTree<T, S>, Entry<T, S>, RTree<T, S>>() {
-
-            @Override
-            public RTree<T, S> call(RTree<T, S> tree, Entry<T, S> entry) {
-                return tree.delete(entry, all);
-            }
-        });
-    }
-
-    /**
      * Returns a new R-tree with the given entries deleted. If <code>all</code> is
      * false deletes only one if exists. If <code>all</code> is true deletes all
      * matching entries.
@@ -654,12 +614,12 @@ public final class RTree<T, S extends Geometry> {
      * @return sequence of matching entries
      */
     @VisibleForTesting
-    Observable<Entry<T, S>> search(Func1<? super Geometry, Boolean> condition) {
+Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
         if (root.isPresent())
-            return Observable.from(Iterables.search(root.get(),  condition));
+            return Iterables.search(root.get(),  condition);
             //return Observable.unsafeCreate(new OnSubscribeSearch<T, S>(root.get(), condition));
         else
-            return Observable.empty();
+            return Collections.emptyList();
     }
 
     /**
@@ -670,10 +630,10 @@ public final class RTree<T, S extends Geometry> {
      *            the rectangle to check intersection with
      * @return whether the geometry and the rectangle intersect
      */
-    public static Func1<Geometry, Boolean> intersects(final Rectangle r) {
-        return new Func1<Geometry, Boolean>() {
+    public static Predicate<Geometry> intersects(final Rectangle r) {
+        return new Predicate<Geometry>() {
             @Override
-            public Boolean call(Geometry g) {
+            public boolean test(Geometry g) {
                 return g.intersects(r);
             }
         };
@@ -683,9 +643,9 @@ public final class RTree<T, S extends Geometry> {
      * Returns the always true predicate. See {@link RTree#entries()} for example
      * use.
      */
-    private static final Func1<Geometry, Boolean> ALWAYS_TRUE = new Func1<Geometry, Boolean>() {
+    private static final Predicate<Geometry> ALWAYS_TRUE = new Predicate<Geometry>() {
         @Override
-        public Boolean call(Geometry rectangle) {
+        public boolean test(Geometry rectangle) {
             return true;
         }
     };
@@ -698,7 +658,7 @@ public final class RTree<T, S extends Geometry> {
      *            rectangle to check intersection with the entry mbr
      * @return entries that intersect with the rectangle r
      */
-    public Observable<Entry<T, S>> search(final Rectangle r) {
+    public Iterable<Entry<T, S>> search(final Rectangle r) {
         return search(intersects(r));
     }
 
@@ -710,15 +670,15 @@ public final class RTree<T, S extends Geometry> {
      *            point to check intersection with the entry mbr
      * @return entries that intersect with the point p
      */
-    public Observable<Entry<T, S>> search(final Point p) {
+    public Iterable<Entry<T, S>> search(final Point p) {
         return search(p.mbr());
     }
 
-    public Observable<Entry<T, S>> search(Circle circle) {
+    public Iterable<Entry<T, S>> search(Circle circle) {
         return search(circle, Intersects.geometryIntersectsCircle);
     }
 
-    public Observable<Entry<T, S>> search(Line line) {
+    public Iterable<Entry<T, S>> search(Line line) {
         return search(line, Intersects.geometryIntersectsLine);
     }
 
@@ -733,71 +693,18 @@ public final class RTree<T, S extends Geometry> {
      *            entries returned must be within this distance from rectangle r
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T, S>> search(final Rectangle r, final double maxDistance) {
-        return search(new Func1<Geometry, Boolean>() {
+    public Iterable<Entry<T, S>> search(final Rectangle r, final double maxDistance) {
+        return search(new Predicate<Geometry>() {
             @Override
-            public Boolean call(Geometry g) {
+            public boolean test(Geometry g) {
                 return g.distance(r) < maxDistance;
             }
         });
     }
 
-    /**
-     * Returns the intersections with the the given (arbitrary) geometry using an
-     * intersection function to filter the search results returned from a search of
-     * the mbr of <code>g</code>.
-     * 
-     * @param <R>
-     *            type of geometry being searched for intersection with
-     * @param g
-     *            geometry being searched for intersection with
-     * @param intersects
-     *            function to determine if the two geometries intersect
-     * @return a sequence of entries that intersect with g
-     */
-    public <R extends Geometry> Observable<Entry<T, S>> search(final R g,
-            final Func2<? super S, ? super R, Boolean> intersects) {
-        return search(g.mbr()).filter(new Func1<Entry<T, S>, Boolean>() {
-            @Override
-            public Boolean call(Entry<T, S> entry) {
-                return intersects.call(entry.geometry(), g);
-            }
-        });
-    }
+   
 
-    /**
-     * Returns all entries strictly less than <code>maxDistance</code> from the
-     * given geometry. Because the geometry may be of an arbitrary type it is
-     * necessary to also pass a distance function.
-     * 
-     * @param <R>
-     *            type of the geometry being searched for
-     * @param g
-     *            geometry to search for entries within maxDistance of
-     * @param maxDistance
-     *            strict max distance that entries must be from g
-     * @param distance
-     *            function to calculate the distance between geometries of type S
-     *            and R.
-     * @return entries strictly less than maxDistance from g
-     */
-    public <R extends Geometry> Observable<Entry<T, S>> search(final R g, final double maxDistance,
-            final Func2<? super S, ? super R, Double> distance) {
-        return search(new Func1<Geometry, Boolean>() {
-            @Override
-            public Boolean call(Geometry entry) {
-                // just use the mbr initially
-                return entry.distance(g.mbr()) < maxDistance;
-            }
-        })
-                // refine with distance function
-                .filter(new Func1<Entry<T, S>, Boolean>() {
-                    @Override
-                    public Boolean call(Entry<T, S> entry) {
-                        return distance.call(entry.geometry(), g) < maxDistance;
-                    }
-                });
-    }
+   
 
     /**
      * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
@@ -810,7 +717,7 @@ public final class RTree<T, S extends Geometry> {
      *            entries returned must be within this distance from point p
      * @return the sequence of matching entries
      */
-    public Observable<Entry<T, S>> search(final Point p, final double maxDistance) {
+    public Iterable<Entry<T, S>> search(final Point p, final double maxDistance) {
         return search(p.mbr(), maxDistance);
     }
 
@@ -826,7 +733,7 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Observable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
+    public Iterable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
         return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
                 Comparators.<T, S>ascendingDistance(r)));
@@ -844,7 +751,7 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Observable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
+    public Iterable<Entry<T, S>> nearest(final Point p, final double maxDistance, int maxCount) {
         return nearest(p.mbr(), maxDistance, maxCount);
     }
 
@@ -853,7 +760,7 @@ public final class RTree<T, S extends Geometry> {
      * 
      * @return all entries in the R-tree
      */
-    public Observable<Entry<T, S>> entries() {
+    public Iterable<Entry<T, S>> entries() {
         return search(ALWAYS_TRUE);
     }
 

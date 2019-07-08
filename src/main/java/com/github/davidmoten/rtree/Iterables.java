@@ -2,11 +2,10 @@ package com.github.davidmoten.rtree;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
-
-import rx.functions.Func1;
 
 public final class Iterables {
 
@@ -15,16 +14,16 @@ public final class Iterables {
     }
 
     public static <T, S extends Geometry> Iterable<Entry<T, S>> search(Node<T, S> node,
-            Func1<? super Geometry, Boolean> condition) {
+            Predicate<? super Geometry> condition) {
         return new SearchIterable<T, S>(node, condition);
     }
 
     public static final class SearchIterable<T, S extends Geometry> implements Iterable<Entry<T, S>> {
 
         private final Node<T, S> node;
-        private final Func1<? super Geometry, Boolean> condition;
+        private final Predicate<? super Geometry> condition;
 
-        public SearchIterable(Node<T, S> node, Func1<? super Geometry, Boolean> condition) {
+        public SearchIterable(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.node = node;
             this.condition = condition;
         }
@@ -38,11 +37,11 @@ public final class Iterables {
 
     public static final class SearchIterator<T, S extends Geometry> implements Iterator<Entry<T, S>> {
 
-        private final Func1<? super Geometry, Boolean> condition;
+        private final Predicate<? super Geometry> condition;
         private ImmutableStack<NodePosition<T, S>> stack;
         private Entry<T, S> next;
 
-        public SearchIterator(Node<T, S> node, Func1<? super Geometry, Boolean> condition) {
+        public SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.condition = condition;
             this.stack = ImmutableStack.create(new NodePosition<T, S>(node, 0));
         }
@@ -82,13 +81,13 @@ public final class Iterables {
     }
 
     static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> search(
-            final Func1<? super Geometry, Boolean> condition, Entry<T, S>[] result,
+            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
             final ImmutableStack<NodePosition<T, S>> stack) {
         return searchAndReturnStack(condition, result, stack);
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAndReturnStack(
-            final Func1<? super Geometry, Boolean> condition, Entry<T, S>[] result,
+            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
             ImmutableStack<NodePosition<T, S>> stack) {
 
         while (!stack.isEmpty()) {
@@ -110,20 +109,20 @@ public final class Iterables {
     }
 
     private static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> searchLeaf(
-            final Func1<? super Geometry, Boolean> condition, Entry<T, S>[] result,
+            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
             ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
-        if (condition.call(entry.geometry())) {
+        if (condition.test(entry.geometry())) {
             result[0] = entry;
         }
         return stack.pop().push(np.nextPosition());
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
-            final Func1<? super Geometry, Boolean> condition, ImmutableStack<NodePosition<T, S>> stack,
+            final Predicate<? super Geometry> condition, ImmutableStack<NodePosition<T, S>> stack,
             NodePosition<T, S> np) {
         Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
-        if (condition.call(child.geometry())) {
+        if (condition.test(child.geometry())) {
             stack = stack.push(new NodePosition<T, S>(child, 0));
         } else {
             stack = stack.pop().push(np.nextPosition());

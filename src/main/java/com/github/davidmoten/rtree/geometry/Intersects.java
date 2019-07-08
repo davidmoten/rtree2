@@ -1,6 +1,6 @@
 package com.github.davidmoten.rtree.geometry;
 
-import rx.functions.Func2;
+import java.util.function.BiPredicate;
 
 public final class Intersects {
 
@@ -8,96 +8,96 @@ public final class Intersects {
         // prevent instantiation
     }
 
-    public static final Func2<Rectangle, Circle, Boolean> rectangleIntersectsCircle = new Func2<Rectangle, Circle, Boolean>() {
+    public static final BiPredicate<Rectangle, Circle> rectangleIntersectsCircle = new BiPredicate<Rectangle, Circle>() {
         @Override
-        public Boolean call(Rectangle rectangle, Circle circle) {
-            return circleIntersectsRectangle.call(circle, rectangle);
+        public boolean test(Rectangle rectangle, Circle circle) {
+            return circleIntersectsRectangle.test(circle, rectangle);
         }
     };
 
-    public static final Func2<Circle, Rectangle, Boolean> circleIntersectsRectangle = new Func2<Circle, Rectangle, Boolean>() {
+    public static final BiPredicate<Circle, Rectangle> circleIntersectsRectangle = new BiPredicate<Circle, Rectangle>() {
         @Override
-        public Boolean call(Circle circle, Rectangle rectangle) {
+        public boolean test(Circle circle, Rectangle rectangle) {
             return circle.intersects(rectangle);
         }
     };
 
-    public static final Func2<Point, Circle, Boolean> pointIntersectsCircle = new Func2<Point, Circle, Boolean>() {
+    public static final BiPredicate<Point, Circle> pointIntersectsCircle = new BiPredicate<Point, Circle>() {
         @Override
-        public Boolean call(Point point, Circle circle) {
-            return circleIntersectsPoint.call(circle, point);
+        public boolean test(Point point, Circle circle) {
+            return circleIntersectsPoint.test(circle, point);
         }
     };
 
-    public static final Func2<Circle, Point, Boolean> circleIntersectsPoint = new Func2<Circle, Point, Boolean>() {
+    public static final BiPredicate<Circle, Point> circleIntersectsPoint = new BiPredicate<Circle, Point>() {
         @Override
-        public Boolean call(Circle circle, Point point) {
+        public boolean test(Circle circle, Point point) {
             return circle.intersects(point);
         }
     };
 
-    public static final Func2<Circle, Circle, Boolean> circleIntersectsCircle = new Func2<Circle, Circle, Boolean>() {
+    public static final BiPredicate<Circle, Circle> circleIntersectsCircle = new BiPredicate<Circle, Circle>() {
         @Override
-        public Boolean call(Circle a, Circle b) {
+        public boolean test(Circle a, Circle b) {
             return a.intersects(b);
         }
     };
 
-    public static final Func2<Line, Line, Boolean> lineIntersectsLine = new Func2<Line, Line, Boolean>() {
+    public static final BiPredicate<Line, Line> lineIntersectsLine = new BiPredicate<Line, Line>() {
         @Override
-        public Boolean call(Line a, Line b) {
+        public boolean test(Line a, Line b) {
             return a.intersects(b);
         }
     };
 
-    public static final Func2<Line, Rectangle, Boolean> lineIntersectsRectangle = new Func2<Line, Rectangle, Boolean>() {
+    public static final BiPredicate<Line, Rectangle> lineIntersectsRectangle = new BiPredicate<Line, Rectangle>() {
         @Override
-        public Boolean call(Line a, Rectangle r) {
-            return rectangleIntersectsLine.call(r, a);
+        public boolean test(Line a, Rectangle r) {
+            return rectangleIntersectsLine.test(r, a);
         }
     };
 
-    public static final Func2<Rectangle, Line, Boolean> rectangleIntersectsLine = new Func2<Rectangle, Line, Boolean>() {
+    public static final BiPredicate<Rectangle, Line> rectangleIntersectsLine = new BiPredicate<Rectangle, Line>() {
         @Override
-        public Boolean call(Rectangle r, Line a) {
+        public boolean test(Rectangle r, Line a) {
             return a.intersects(r);
         }
     };
 
-    public static final Func2<Line, Circle, Boolean> lineIntersectsCircle = new Func2<Line, Circle, Boolean>() {
+    public static final BiPredicate<Line, Circle> lineIntersectsCircle = new BiPredicate<Line, Circle>() {
         @Override
-        public Boolean call(Line a, Circle c) {
-            return circleIntersectsLine.call(c, a);
+        public boolean test(Line a, Circle c) {
+            return circleIntersectsLine.test(c, a);
         }
     };
 
-    public static final Func2<Circle, Line, Boolean> circleIntersectsLine = new Func2<Circle, Line, Boolean>() {
+    public static final BiPredicate<Circle, Line> circleIntersectsLine = new BiPredicate<Circle, Line>() {
         @Override
-        public Boolean call(Circle c, Line a) {
+        public boolean test(Circle c, Line a) {
             return a.intersects(c);
         }
     };
 
-    public static final Func2<Line, Point, Boolean> lineIntersectsPoint = new Func2<Line, Point, Boolean>() {
+    public static final BiPredicate<Line, Point> lineIntersectsPoint = new BiPredicate<Line, Point>() {
 
         @Override
-        public Boolean call(Line line, Point point) {
-            return pointIntersectsLine.call(point, line);
+        public boolean test(Line line, Point point) {
+            return pointIntersectsLine.test(point, line);
         }
     };
 
-    public static final Func2<Point, Line, Boolean> pointIntersectsLine = new Func2<Point, Line, Boolean>() {
+    public static final BiPredicate<Point, Line> pointIntersectsLine = new BiPredicate<Point, Line>() {
 
         @Override
-        public Boolean call(Point point, Line line) {
+        public boolean test(Point point, Line line) {
             return line.intersects(point);
         }
     };
 
-    public static final Func2<Geometry, Line, Boolean> geometryIntersectsLine = new Func2<Geometry, Line, Boolean>() {
+    public static final BiPredicate<Geometry, Line> geometryIntersectsLine = new BiPredicate<Geometry, Line>() {
 
         @Override
-        public Boolean call(Geometry geometry, Line line) {
+        public boolean test(Geometry geometry, Line line) {
             if (geometry instanceof Line)
                 return line.intersects((Line) geometry);
             else if (geometry instanceof Circle)
@@ -111,10 +111,10 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Geometry, Circle, Boolean> geometryIntersectsCircle = new Func2<Geometry, Circle, Boolean>() {
+    public static final BiPredicate<Geometry, Circle> geometryIntersectsCircle = new BiPredicate<Geometry, Circle>() {
 
         @Override
-        public Boolean call(Geometry geometry, Circle circle) {
+        public boolean test(Geometry geometry, Circle circle) {
             if (geometry instanceof Line)
                 return circle.intersects((Line) geometry);
             else if (geometry instanceof Circle)
@@ -128,18 +128,18 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Circle, Geometry, Boolean> circleIntersectsGeometry = new Func2<Circle, Geometry, Boolean>() {
+    public static final BiPredicate<Circle, Geometry> circleIntersectsGeometry = new BiPredicate<Circle, Geometry>() {
 
         @Override
-        public Boolean call(Circle circle, Geometry geometry) {
-            return geometryIntersectsCircle.call(geometry, circle);
+        public boolean test(Circle circle, Geometry geometry) {
+            return geometryIntersectsCircle.test(geometry, circle);
         }
     };
 
-    public static final Func2<Geometry, Rectangle, Boolean> geometryIntersectsRectangle = new Func2<Geometry, Rectangle, Boolean>() {
+    public static final BiPredicate<Geometry, Rectangle> geometryIntersectsRectangle = new BiPredicate<Geometry, Rectangle>() {
 
         @Override
-        public Boolean call(Geometry geometry, Rectangle r) {
+        public boolean test(Geometry geometry, Rectangle r) {
             if (geometry instanceof Line)
                 return geometry.intersects(r);
             else if (geometry instanceof Circle)
@@ -153,27 +153,27 @@ public final class Intersects {
         }
     };
 
-    public static final Func2<Rectangle, Geometry, Boolean> rectangleIntersectsGeometry = new Func2<Rectangle, Geometry, Boolean>() {
+    public static final BiPredicate<Rectangle, Geometry> rectangleIntersectsGeometry = new BiPredicate<Rectangle, Geometry>() {
 
         @Override
-        public Boolean call(Rectangle r, Geometry geometry) {
-            return geometryIntersectsRectangle.call(geometry, r);
+        public boolean test(Rectangle r, Geometry geometry) {
+            return geometryIntersectsRectangle.test(geometry, r);
         }
     };
 
-    public static final Func2<Geometry, Point, Boolean> geometryIntersectsPoint = new Func2<Geometry, Point, Boolean>() {
+    public static final BiPredicate<Geometry, Point> geometryIntersectsPoint = new BiPredicate<Geometry, Point>() {
 
         @Override
-        public Boolean call(Geometry geometry, Point point) {
-            return geometryIntersectsRectangle.call(geometry, point.mbr());
+        public boolean test(Geometry geometry, Point point) {
+            return geometryIntersectsRectangle.test(geometry, point.mbr());
         }
     };
 
-    public static final Func2<Point, Geometry, Boolean> pointIntersectsGeometry = new Func2<Point, Geometry, Boolean>() {
+    public static final BiPredicate<Point, Geometry> pointIntersectsGeometry = new BiPredicate<Point, Geometry>() {
 
         @Override
-        public Boolean call(Point point, Geometry geometry) {
-            return geometryIntersectsPoint.call(geometry, point);
+        public boolean test(Point point, Geometry geometry) {
+            return geometryIntersectsPoint.test(geometry, point);
         }
     };
 
