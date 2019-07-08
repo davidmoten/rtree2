@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 public final class Iterables {
@@ -226,6 +227,10 @@ public final class Iterables {
             list.add(item);
         }
         return list;
+    }
+
+    public static boolean isEmpty(Iterable<?> entries) {
+        return !entries.iterator().hasNext();
     }
     
 }
