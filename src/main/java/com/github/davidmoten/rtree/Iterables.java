@@ -80,58 +80,39 @@ public final class Iterables {
     static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> search(
             final Func1<? super Geometry, Boolean> condition, Entry<T, S>[] result,
             final ImmutableStack<NodePosition<T, S>> stack) {
-        StackAndRequest<NodePosition<T, S>> state = StackAndRequest.create(stack, 1);
-        return searchAndReturnStack(condition, result, state);
+        return searchAndReturnStack(condition, result, stack);
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAndReturnStack(
             final Func1<? super Geometry, Boolean> condition, Entry<T, S>[] result,
-            StackAndRequest<NodePosition<T, S>> state) {
+            ImmutableStack<NodePosition<T, S>> stack) {
 
-        while (!state.stack.isEmpty()) {
-            NodePosition<T, S> np = state.stack.peek();
+        while (!stack.isEmpty()) {
+            NodePosition<T, S> np = stack.peek();
             if (result[0]!= null)
-                return state.stack;
+                return stack;
             else if (np.position() == np.node().count()) {
                 // handle after last in node
-                state = StackAndRequest.create(searchAfterLastInNode(state.stack), state.request);
+                stack = searchAfterLastInNode(stack);
             } else if (np.node() instanceof NonLeaf) {
                 // handle non-leaf
-                state = StackAndRequest.create(searchNonLeaf(condition, state.stack, np), state.request);
+                stack = searchNonLeaf(condition, stack, np);
             } else {
                 // handle leaf
-                state = searchLeaf(condition, result, state, np);
+                stack = searchLeaf(condition, result, stack, np);
             }
         }
-        return state.stack;
+        return stack;
     }
 
-    private static class StackAndRequest<T> {
-        private final ImmutableStack<T> stack;
-        private final long request;
-
-        StackAndRequest(ImmutableStack<T> stack, long request) {
-            this.stack = stack;
-            this.request = request;
-        }
-
-        static <T> StackAndRequest<T> create(ImmutableStack<T> stack, long request) {
-            return new StackAndRequest<T>(stack, request);
-        }
-
-    }
-
-    private static <T, S extends Geometry> StackAndRequest<NodePosition<T, S>> searchLeaf(
+    private static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> searchLeaf(
             final Func1<? super Geometry, Boolean> condition, Entry<T, S>[] result,
-            StackAndRequest<NodePosition<T, S>> state, NodePosition<T, S> np) {
-        final long nextRequest;
+            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.call(entry.geometry())) {
             result[0] = entry;
-            nextRequest = state.request - 1;
-        } else
-            nextRequest = state.request;
-        return StackAndRequest.create(state.stack.pop().push(np.nextPosition()), nextRequest);
+        } 
+        return stack.pop().push(np.nextPosition());
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
