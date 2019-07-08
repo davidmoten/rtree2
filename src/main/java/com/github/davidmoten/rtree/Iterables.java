@@ -10,6 +10,10 @@ import rx.functions.Func1;
 
 public final class Iterables {
 
+    private Iterables() {
+        // prevent instantiation
+    }
+
     public static <T, S extends Geometry> Iterable<Entry<T, S>> search(Node<T, S> node,
             Func1<? super Geometry, Boolean> condition) {
         return new SearchIterable<T, S>(node, condition);
@@ -89,7 +93,7 @@ public final class Iterables {
 
         while (!stack.isEmpty()) {
             NodePosition<T, S> np = stack.peek();
-            if (result[0]!= null)
+            if (result[0] != null)
                 return stack;
             else if (np.position() == np.node().count()) {
                 // handle after last in node
@@ -111,7 +115,7 @@ public final class Iterables {
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.call(entry.geometry())) {
             result[0] = entry;
-        } 
+        }
         return stack.pop().push(np.nextPosition());
     }
 
