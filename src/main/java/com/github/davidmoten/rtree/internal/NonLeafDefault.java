@@ -10,9 +10,6 @@ import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
 public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S> {
 
     private final List<? extends Node<T, S>> children;
@@ -29,12 +26,6 @@ public final class NonLeafDefault<T, S extends Geometry> implements NonLeaf<T, S
     @Override
     public Geometry geometry() {
         return mbr;
-    }
-
-    @Override
-    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T, S>> subscriber) {
-        NonLeafHelper.search(criterion, subscriber, this);
     }
 
     @Override

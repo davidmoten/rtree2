@@ -14,29 +14,10 @@ import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
 public final class NonLeafHelper {
 
     private NonLeafHelper() {
         // prevent instantiation
-    }
-
-    public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node) {
-        if (!criterion.call(node.geometry().mbr()))
-            return;
-
-        int numChildren = node.count();
-        for (int i = 0; i < numChildren; i++) {
-            if (subscriber.isUnsubscribed()) {
-                return;
-            } else {
-                Node<T, S> child = node.child(i);
-                child.searchWithoutBackpressure(criterion, subscriber);
-            }
-        }
     }
 
     public static <T, S extends Geometry> List<Node<T, S>> add(

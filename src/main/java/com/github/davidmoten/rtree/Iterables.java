@@ -1,6 +1,9 @@
 package com.github.davidmoten.rtree;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
@@ -206,4 +209,23 @@ public final class Iterables {
         }
 
     }
+    
+    public static long size(Iterable<?> iterable) {
+        Iterator<?> it = iterable.iterator();
+        long count = 0;
+        while (it.hasNext()) {
+            it.next();
+            count++;
+        }
+        return count;
+    }
+    
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        List<T> list = new ArrayList<T>();
+        for (T item : iterable) {
+            list.add(item);
+        }
+        return list;
+    }
+    
 }

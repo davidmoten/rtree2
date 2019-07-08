@@ -7,6 +7,7 @@ import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.function.BiPredicate;
@@ -22,9 +23,7 @@ import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
-import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
-import com.github.davidmoten.rtree.internal.operators.OperatorBoundedPriorityQueue;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
@@ -755,8 +754,9 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
      */
     public Iterable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
-        return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
-                Comparators.<T, S>ascendingDistance(r)));
+        throw new UnsupportedOperationException("not implemented yet");
+//        return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
+//                Comparators.<T, S>ascendingDistance(r)));
     }
 
     /**
@@ -819,17 +819,20 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
     }
 
     private Rectangle calculateMaxView(RTree<T, S> tree) {
-        return tree.entries().reduce(Optional.<Rectangle>absent(),
-                new Func2<Optional<Rectangle>, Entry<T, S>, Optional<Rectangle>>() {
-
-                    @Override
-                    public Optional<Rectangle> call(Optional<Rectangle> r, Entry<T, S> entry) {
-                        if (r.isPresent())
-                            return of(r.get().add(entry.geometry().mbr()));
-                        else
-                            return of(entry.geometry().mbr());
-                    }
-                }).toBlocking().single().or(rectangle(0, 0, 0, 0));
+        Iterator<Entry<T, S>> it = tree.entries().iterator();
+        Rectangle r = null;
+        while (it.hasNext()) {
+            Entry<T, S> entry = it.next();
+            if (r!= null)
+                r = r.add(entry.geometry().mbr());
+            else
+                r = entry.geometry().mbr();
+        }
+        if (r == null) {
+            return rectangle(0,0,0,0);
+        } else {
+            return r;
+        }
     }
 
     public Optional<? extends Node<T, S>> root() {

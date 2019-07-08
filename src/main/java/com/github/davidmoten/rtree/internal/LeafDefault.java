@@ -9,9 +9,6 @@ import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
 public final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
 
     private final List<Entry<T, S>> entries;
@@ -32,12 +29,6 @@ public final class LeafDefault<T, S extends Geometry> implements Leaf<T, S> {
     @Override
     public List<Entry<T, S>> entries() {
         return entries;
-    }
-
-    @Override
-    public void searchWithoutBackpressure(Func1<? super Geometry, Boolean> condition,
-            Subscriber<? super Entry<T, S>> subscriber) {
-        LeafHelper.search(condition, subscriber, this);
     }
 
     @Override
