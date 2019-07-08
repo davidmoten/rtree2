@@ -32,7 +32,6 @@ import org.junit.Test;
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree.fbs.FactoryFlatBuffers;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -41,7 +40,6 @@ import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.EntryDefault;
-import com.github.davidmoten.rtree.internal.Functions;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -57,13 +55,13 @@ public class RTreeTest {
     @Test
     public void testInstantiation() {
         RTree<Object, Geometry> tree = RTree.create();
-        assertTrue(tree.entries().isEmpty().toBlocking().single());
+        assertTrue(Observable.from(tree.entries()).isEmpty().toBlocking().single());
     }
 
     @Test
     public void testSearchEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
-        assertTrue(tree.search(r(1)).isEmpty().toBlocking().single());
+        assertTrue(Observable.from(tree.search(r(1))).isEmpty().toBlocking().single());
     }
 
     @SuppressWarnings("unchecked")
@@ -72,7 +70,7 @@ public class RTreeTest {
         RTree<Object, Rectangle> tree = RTree.create();
         Entry<Object, Rectangle> entry = e(1);
         tree = tree.add(entry);
-        assertEquals(Arrays.asList(entry), tree.search(r(1)).toList().toBlocking().single());
+        assertEquals(Arrays.asList(entry), Observable.from(tree.search(r(1))).toList().toBlocking().single());
     }
 
     @Test
@@ -111,7 +109,7 @@ public class RTreeTest {
     @Test
     public void testBulkLoadingEmpty() {
         RTree<Object, Point> tree = RTree.create(new ArrayList<Entry<Object, Point>>());
-        assertTrue(tree.entries().isEmpty().toBlocking().single());
+        assertTrue(Observable.from(tree.entries()).isEmpty().toBlocking().single());
     }
 
     @Test
@@ -131,7 +129,7 @@ public class RTreeTest {
             entries.add(new EntryDefault<Integer, Geometry>(i, point));
         }
         RTree<Integer, Geometry> tree = RTree.create(entries);
-        int entrySize = tree.entries().count().toBlocking().single();
+        int entrySize = Observable.from(tree.entries()).count().toBlocking().single();
         System.out.println("entry count: " + entrySize);
         assertEquals(entrySize, entries.size());
     }
@@ -141,19 +139,7 @@ public class RTreeTest {
     public void testSearchOnOneItemOnBulkLoadingRTree() {
         Entry<Object, Rectangle> entry = e(1);
         RTree<Object, Rectangle> tree = RTree.create(Arrays.asList(entry));
-        assertEquals(Arrays.asList(entry), tree.search(r(1)).toList().toBlocking().single());
-    }
-
-    @Test
-    public void testAddObservable() {
-        Entry<Object, Rectangle> e1 = e(1);
-        Entry<Object, Rectangle> e2 = e2(1);
-
-        RTree<Object, Rectangle> tree = RTree.maxChildren(4).<Object, Rectangle>create().add(e1)
-                .add(e2).delete(e1);
-        RTree<Object, Rectangle> emptyTree = RTree.maxChildren(4).create();
-        rx.Observable<?> deletedtree = emptyTree.add(tree.entries());
-        assertEquals(2, (int) deletedtree.count().toBlocking().single());
+        assertEquals(Arrays.asList(entry), Observable.from(tree.search(r(1))).toList().toBlocking().single());
     }
 
     @Test
@@ -168,11 +154,10 @@ public class RTreeTest {
             long diff = System.currentTimeMillis() - t;
             System.out.println("inserts/second = " + ((double) n / diff * 1000));
         }
-        assertEquals(n, (int) tree.entries().count().toBlocking().single());
+        assertEquals(n, Iterables.size(tree.entries()));
 
         long t = System.currentTimeMillis();
-        Entry<Object, Geometry> entry = tree.search(rectangle(0, 0, 500, 500)).first().toBlocking()
-                .single();
+        Entry<Object, Geometry> entry = tree.search(rectangle(0, 0, 500, 500)).iterator().next();
         long diff = System.currentTimeMillis() - t;
         System.out.println("found " + entry);
         System.out.println("time to get nearest with " + n + " entries=" + diff);
@@ -183,7 +168,7 @@ public class RTreeTest {
     public void testSearchOfPoint() {
         Object value = new Object();
         RTree<Object, Geometry> tree = RTree.create().add(value, point(1, 1));
-        List<Entry<Object, Geometry>> list = tree.search(point(1, 1)).toList().toBlocking()
+        List<Entry<Object, Geometry>> list = Observable.from(tree.search(point(1, 1))).toList().toBlocking()
                 .single();
         assertEquals(1, list.size());
         assertEquals(value, list.get(0).value());
@@ -193,7 +178,7 @@ public class RTreeTest {
     public void testSearchOfPointWithinDistance() {
         Object value = new Object();
         RTree<Object, Geometry> tree = RTree.create().add(value, point(1, 1));
-        List<Entry<Object, Geometry>> list = tree.search(point(1, 1), 2).toList().toBlocking()
+        List<Entry<Object, Geometry>> list = Observable.from(tree.search(point(1, 1), 2)).toList().toBlocking()
                 .single();
         assertEquals(1, list.size());
         assertEquals(value, list.get(0).value());
@@ -227,7 +212,7 @@ public class RTreeTest {
         tree = tree.add(entry).add(entry2);
 
         tree = tree.delete(entry.value(), entry.geometry(), true);
-        List<Entry<Object, Rectangle>> entries = tree.entries().toList().toBlocking().single();
+        List<Entry<Object, Rectangle>> entries = Observable.from(tree.entries()).toList().toBlocking().single();
         assertTrue(entries.contains(entry2) && !entries.contains(entry));
     }
     
@@ -243,7 +228,7 @@ public class RTreeTest {
     public void testDepthWith0() {
         RTree<Object, Geometry> tree = RTree.create();
         tree = tree.add(createRandomEntries(5));
-        List<Entry<Object, Geometry>> entries = tree.entries().toList().toBlocking().single();
+        List<Entry<Object, Geometry>> entries = Iterables.toList(tree.entries());
         RTree<Object, Geometry> deletedTree = tree.delete(entries, true);
         assertTrue(deletedTree.isEmpty());
     }
@@ -265,24 +250,9 @@ public class RTreeTest {
         List<Entry<Object, Rectangle>> list = new ArrayList<Entry<Object, Rectangle>>();
         list.add(entry1);
         list.add(entry3);
-        RTree<Object, Rectangle> deletedTree = tree.delete(list);
-        List<Entry<Object, Rectangle>> entries = deletedTree.entries().toList().toBlocking()
-                .single();
+        List<Entry<Object, Rectangle>> entries = Iterables.toList(tree.entries());
         assertTrue(
                 entries.contains(entry2) && !entries.contains(entry1) && !entries.contains(entry3));
-    }
-
-    @Test
-    public void testObservableDeletion() {
-        RTree<Object, Rectangle> tree = RTree.create();
-        Entry<Object, Rectangle> entry1 = e(1);
-        Entry<Object, Rectangle> entry2 = e(3);
-        Entry<Object, Rectangle> entry3 = e(5);
-        tree = tree.add(entry1).add(entry2).add(entry3);
-        rx.Observable<Entry<Object, Rectangle>> obs = tree.search(r(2), 5);
-        rx.Observable<RTree<Object, Rectangle>> deleted = tree.delete(obs, true);
-        assertTrue(deleted.elementAt(deleted.count().toBlocking().single() - 1).count().toBlocking()
-                .single() == 1);
     }
 
     @Test
@@ -300,8 +270,8 @@ public class RTreeTest {
         Entry<Object, Rectangle> entry = e(1);
         tree = tree.add(entry).add(entry);
         tree = tree.delete(entry, false);
-        List<Entry<Object, Rectangle>> entries = tree.entries().toList().toBlocking().single();
-        int countEntries = tree.entries().count().toBlocking().single();
+        List<Entry<Object, Rectangle>> entries = Iterables.toList( tree.entries());
+        long countEntries = Iterables.size(tree.entries());
         assertTrue(countEntries == 1);
         assertTrue(entries.get(0).equals(entry));
     }

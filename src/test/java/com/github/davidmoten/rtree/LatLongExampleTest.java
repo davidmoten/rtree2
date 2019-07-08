@@ -2,7 +2,6 @@ package com.github.davidmoten.rtree;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -11,6 +10,9 @@ import com.github.davidmoten.grumpy.core.Position;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+
+import rx.Observable;
+import rx.functions.Func1;
 
 public class LatLongExampleTest {
 
@@ -74,7 +76,7 @@ public class LatLongExampleTest {
         // now find the circles that contain bungendore (which is 30km from
         // Canberra)
         final Point location = bungendore;
-        String result = Iterables tree.search(location)
+        String result = Observable.from(tree.search(location))
                 // filter on the exact distance from the centre of the GeoCircle
                 .filter(new Func1<Entry<GeoCircleValue<String>, Rectangle>, Boolean>() {
                     Position from = Position.create(location.y(), location.x());
