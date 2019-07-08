@@ -49,7 +49,7 @@ final class Backpressure {
         return state.stack;
     }
 
-    private static class StackAndRequest<T> {
+    static class StackAndRequest<T> {
         private final ImmutableStack<T> stack;
         private final long request;
 
