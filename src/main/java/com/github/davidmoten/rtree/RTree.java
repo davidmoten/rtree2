@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import com.github.davidmoten.guavamini.Lists;
@@ -680,6 +681,25 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
 
     public Iterable<Entry<T, S>> search(Line line) {
         return search(line, Intersects.geometryIntersectsLine);
+    }
+    
+    /**
+     * Returns the intersections with the the given (arbitrary) geometry using an
+     * intersection function to filter the search results returned from a search of
+     * the mbr of <code>g</code>.
+     * 
+     * @param <R>
+     *            type of geometry being searched for intersection with
+     * @param g
+     *            geometry being searched for intersection with
+     * @param intersects
+     *            function to determine if the two geometries intersect
+     * @return a sequence of entries that intersect with g
+     */
+    public <R extends Geometry> Iterable<Entry<T, S>> search(final R g,
+            final BiPredicate<? super S, ? super R> intersects) {
+        return Iterables.filter(search(g.mbr()),entry -> 
+                intersects.test(entry.geometry(), g));
     }
 
     /**

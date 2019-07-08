@@ -109,8 +109,8 @@ public final class Iterables {
     }
 
     private static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> searchLeaf(
-            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
-            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
+            final Predicate<? super Geometry> condition, Entry<T, S>[] result, ImmutableStack<NodePosition<T, S>> stack,
+            NodePosition<T, S> np) {
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.test(entry.geometry())) {
             result[0] = entry;
@@ -142,4 +142,68 @@ public final class Iterables {
         return stack;
     }
 
+    public static <T> Iterable<T> filter(Iterable<? extends T> iterable, Predicate<? super T> condition) {
+        return new FilterIterable<T>(iterable, condition);
+    }
+
+    static final class FilterIterable<T> implements Iterable<T> {
+
+        private final Iterable<? extends T> iterable;
+        private final Predicate<? super T> condition;
+
+        FilterIterable(Iterable<? extends T> iterable, Predicate<? super T> condition) {
+            this.iterable = iterable;
+            this.condition = condition;
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            return new FilterIterator<T>(iterable.iterator(), condition);
+        }
+
+    }
+
+    static final class FilterIterator<T> implements Iterator<T> {
+
+        private Iterator<? extends T> it;
+        private final Predicate<? super T> condition;
+        private T next;
+
+        FilterIterator(Iterator<? extends T> it, Predicate<? super T> condition) {
+            this.it = it;
+            this.condition = condition;
+        }
+
+        @Override
+        public boolean hasNext() {
+            load();
+            return next != null;
+        }
+
+        @Override
+        public T next() {
+            load();
+            if (next == null) {
+                throw new NoSuchElementException();
+            } else {
+                T v = next;
+                next = null;
+                return v;
+            }
+        }
+
+        private void load() {
+            if (next == null && it != null) {
+                while (it.hasNext()) {
+                    T v = it.next();
+                    if (condition.test(v)) {
+                        next = v;
+                        return;
+                    }
+                }
+                it = null;
+            }
+        }
+
+    }
 }
