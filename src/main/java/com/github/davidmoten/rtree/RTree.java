@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -24,6 +25,8 @@ import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
+
+import rx.functions.Func1;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
@@ -739,6 +742,30 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
     public Iterable<Entry<T, S>> search(final Point p, final double maxDistance) {
         return search(p.mbr(), maxDistance);
     }
+    
+    /**
+     * Returns all entries strictly less than <code>maxDistance</code> from the
+     * given geometry. Because the geometry may be of an arbitrary type it is
+     * necessary to also pass a distance function.
+     * 
+     * @param <R>
+     *            type of the geometry being searched for
+     * @param g
+     *            geometry to search for entries within maxDistance of
+     * @param maxDistance
+     *            strict max distance that entries must be from g
+     * @param distance
+     *            function to calculate the distance between geometries of type S
+     *            and R.
+     * @return entries strictly less than maxDistance from g
+     */
+    public <R extends Geometry> Iterable<Entry<T, S>> search(final R g, final double maxDistance,
+            BiFunction<? super S, ? super R, Double> distance) {
+        return Iterables.filter( //
+                search(entry -> entry.distance(g.mbr()) < maxDistance), // refine with distance function
+                entry -> distance.apply(entry.geometry(), g) < maxDistance);
+    }
+
 
     /**
      * Returns the nearest k entries (k=maxCount) to the given rectangle where the

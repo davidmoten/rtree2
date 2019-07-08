@@ -18,91 +18,91 @@ public final class LineTest {
     public void testDoesIntersectOtherLine() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Line b = Geometries.line(0, -1, 0, 1);
-        assertTrue(Intersects.lineIntersectsLine.call(a, b));
+        assertTrue(Intersects.lineIntersectsLine.test(a, b));
     }
 
     @Test
     public void testDoesNotIntersectLine() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Line b = Geometries.line(1.1, -1, 1.1, 1);
-        assertFalse(Intersects.lineIntersectsLine.call(a, b));
+        assertFalse(Intersects.lineIntersectsLine.test(a, b));
     }
 
     @Test
     public void testDoesIntersectRectangle() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Rectangle b = Geometries.rectangle(0.2, -0.5, 0.8, 0.5);
-        assertTrue(Intersects.lineIntersectsRectangle.call(a, b));
+        assertTrue(Intersects.lineIntersectsRectangle.test(a, b));
     }
 
     @Test
     public void testDoesNotIntersectRectangle() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Rectangle b = Geometries.rectangle(1.2, -0.5, 1.8, 0.5);
-        assertFalse(Intersects.lineIntersectsRectangle.call(a, b));
+        assertFalse(Intersects.lineIntersectsRectangle.test(a, b));
     }
 
     @Test
     public void testLineIntersectsCircle() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(0, 0.5, 1);
-        assertTrue(Intersects.lineIntersectsCircle.call(a, c));
+        assertTrue(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesNotIntersectCircle() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(0, 0.5, 0.4);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesNotIntersectCircleEast() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(1.5, 0, 0.4);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesIntersectCircleEast() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(1.5, 0, 0.6);
-        assertTrue(Intersects.lineIntersectsCircle.call(a, c));
+        assertTrue(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesNotIntersectCircleWest() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(-1.5, 0, 0.4);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesIntersectCircleWest() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(-1.5, 0, 0.6);
-        assertTrue(Intersects.lineIntersectsCircle.call(a, c));
+        assertTrue(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesNotIntersectCircleNorth() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(0, 1.5, 0.4);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesNotIntersectCircleSouth() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(0, 1.5, 0.4);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineDoesIntersectCircleSouth() {
         Line a = Geometries.line(-1, 0, 1, 0);
         Circle c = Geometries.circle(0, 1.5, 0.6);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
@@ -119,21 +119,21 @@ public final class LineTest {
     public void testLineSameXWithinCircle() {
         Line a = Geometries.line(1, 2, 1, 4);
         Circle c = Geometries.circle(1, 3, 2);
-        assertTrue(Intersects.lineIntersectsCircle.call(a, c));
+        assertTrue(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineIsPointWithinCircle() {
         Line a = Geometries.line(1, 2, 1, 2);
         Circle c = Geometries.circle(1, 3, 2);
-        assertTrue(Intersects.lineIntersectsCircle.call(a, c));
+        assertTrue(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
     public void testLineIsPointOutsideCircle() {
         Line a = Geometries.line(1, 10, 1, 10);
         Circle c = Geometries.circle(1, 3, 2);
-        assertFalse(Intersects.lineIntersectsCircle.call(a, c));
+        assertFalse(Intersects.lineIntersectsCircle.test(a, c));
     }
 
     @Test
@@ -193,7 +193,6 @@ public final class LineTest {
     @Test
     public void testLineDoesIntersectPoint() {
         assertTrue(Geometries.line(1.5, 1.5, 2.5, 2.5).intersects(point(2, 2)));
-        Rectangle2D d;
     }
     
     @Test

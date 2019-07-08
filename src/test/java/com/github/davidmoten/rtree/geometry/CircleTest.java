@@ -104,14 +104,14 @@ public class CircleTest {
     public void testIntersects() {
         Circle a = circle(0, 0, 1);
         Circle b = circle(0.1, 0.1, 1);
-        assertTrue(Intersects.circleIntersectsCircle.call(a, b));
+        assertTrue(Intersects.circleIntersectsCircle.test(a, b));
     }
 
     @Test
     public void testDoNotIntersect() {
         Circle a = circle(0, 0, 1);
         Circle b = circle(100, 100, 1);
-        assertFalse(Intersects.circleIntersectsCircle.call(a, b));
+        assertFalse(Intersects.circleIntersectsCircle.test(a, b));
     }
 
     @Test
