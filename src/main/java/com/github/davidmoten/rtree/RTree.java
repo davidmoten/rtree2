@@ -24,9 +24,9 @@ import com.github.davidmoten.rtree.geometry.Intersects;
 import com.github.davidmoten.rtree.geometry.Line;
 import com.github.davidmoten.rtree.geometry.Point;
 import com.github.davidmoten.rtree.geometry.Rectangle;
+import com.github.davidmoten.rtree.internal.Comparators;
 import com.github.davidmoten.rtree.internal.NodeAndEntries;
-
-import rx.functions.Func1;
+import com.github.davidmoten.rtree.internal.util.BoundedPriorityQueue;
 
 /**
  * Immutable in-memory 2D R-Tree with configurable splitter heuristic.
@@ -781,9 +781,11 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
      */
     public Iterable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
             int maxCount) {
-        throw new UnsupportedOperationException("not implemented yet");
-//        return search(r, maxDistance).lift(new OperatorBoundedPriorityQueue<Entry<T, S>>(maxCount,
-//                Comparators.<T, S>ascendingDistance(r)));
+        BoundedPriorityQueue<Entry<T, S>> q = new BoundedPriorityQueue<Entry<T,S>>(maxCount, Comparators.<T, S>ascendingDistance(r));
+        for (Entry<T, S> entry: search(r, maxDistance)) {
+            q.add(entry);
+        }
+        return q.asOrderedList();
     }
 
     /**

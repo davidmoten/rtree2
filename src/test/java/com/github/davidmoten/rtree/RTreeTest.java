@@ -243,8 +243,11 @@ public class RTreeTest {
         List<Entry<Object, Rectangle>> list = new ArrayList<Entry<Object, Rectangle>>();
         list.add(entry1);
         list.add(entry3);
+        tree = tree.delete(list);
         List<Entry<Object, Rectangle>> entries = Iterables.toList(tree.entries());
-        assertTrue(entries.contains(entry2) && !entries.contains(entry1) && !entries.contains(entry3));
+        assertTrue(entries.contains(entry2));
+        assertFalse(entries.contains(entry1));
+        assertFalse(entries.contains(entry3));
     }
 
     @Test
