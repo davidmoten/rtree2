@@ -619,7 +619,7 @@ public final class RTree<T, S extends Geometry> {
     @VisibleForTesting
 Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
         if (root.isPresent())
-            return Iterables.search(root.get(),  condition);
+            return Search.search(root.get(),  condition);
             //return Observable.unsafeCreate(new OnSubscribeSearch<T, S>(root.get(), condition));
         else
             return Collections.emptyList();
