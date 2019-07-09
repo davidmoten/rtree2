@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -599,7 +598,7 @@ public final class RTree<T, S extends Geometry> {
 
     /**
      * <p>
-     * Returns an Observable sequence of {@link Entry} that satisfy the given
+     * Returns an {@link Iterable} of {@link Entry} that satisfy the given
      * condition. Note that this method is well-behaved only if:
      *
      * 
@@ -617,10 +616,9 @@ public final class RTree<T, S extends Geometry> {
      * @return sequence of matching entries
      */
     @VisibleForTesting
-Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
+    Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
         if (root.isPresent())
-            return Search.search(root.get(),  condition);
-            //return Observable.unsafeCreate(new OnSubscribeSearch<T, S>(root.get(), condition));
+            return Search.search(root.get(), condition);
         else
             return Collections.emptyList();
     }
@@ -654,7 +652,7 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
     };
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Iterable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangle intersects with the given rectangle.
      * 
      * @param r
@@ -666,7 +664,7 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
     }
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Iterable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangle intersects with the given point.
      * 
      * @param p
@@ -705,7 +703,7 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
     }
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Iterable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangles are strictly less than maxDistance from the
      * given rectangle.
      * 
@@ -729,7 +727,7 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
    
 
     /**
-     * Returns an {@link Observable} sequence of all {@link Entry}s in the R-tree
+     * Returns an {@link Iterable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangles are within maxDistance from the given
      * point.
      * 
@@ -805,7 +803,7 @@ Iterable<Entry<T, S>> search(Predicate<? super Geometry> condition) {
     }
 
     /**
-     * Returns all entries in the tree as an {@link Observable} sequence.
+     * Returns all entries in the tree as an {@link Iterable} sequence.
      * 
      * @return all entries in the R-tree
      */
