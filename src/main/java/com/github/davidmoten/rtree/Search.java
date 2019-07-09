@@ -58,7 +58,6 @@ class Search {
                 next = null;
                 return v;
             }
-
         }
 
         private void load() {
@@ -76,16 +75,9 @@ class Search {
 
     }
 
-    static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> search(
-            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
-            final ImmutableStack<NodePosition<T, S>> stack) {
-        return searchAndReturnStack(condition, result, stack);
-    }
-
-    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAndReturnStack(
+    static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> search(
             final Predicate<? super Geometry> condition, Entry<T, S>[] result,
             ImmutableStack<NodePosition<T, S>> stack) {
-
         while (!stack.isEmpty()) {
             NodePosition<T, S> np = stack.peek();
             if (result[0] != null)
@@ -105,8 +97,8 @@ class Search {
     }
 
     private static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> searchLeaf(
-            final Predicate<? super Geometry> condition, Entry<T, S>[] result, ImmutableStack<NodePosition<T, S>> stack,
-            NodePosition<T, S> np) {
+            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
+            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
         Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
         if (condition.test(entry.geometry())) {
             result[0] = entry;
