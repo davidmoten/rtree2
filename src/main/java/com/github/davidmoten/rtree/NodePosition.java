@@ -25,6 +25,10 @@ final class NodePosition<T, S extends Geometry> {
     NodePosition<T, S> nextPosition() {
         return new NodePosition<T, S>(node, position + 1);
     }
+    
+    NodePosition<T, S> position(int position) {
+        return new NodePosition<T, S>(node, position);
+    }
 
     @Override
     public String toString() {

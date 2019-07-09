@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
-class Search {
+final class Search {
 
     static <T, S extends Geometry> Iterable<Entry<T, S>> search(Node<T, S> node,
             Predicate<? super Geometry> condition) {
@@ -37,7 +37,7 @@ class Search {
         private ImmutableStack<NodePosition<T, S>> stack;
         private Entry<T, S> next;
 
-        public SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
+        SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.condition = condition;
             this.stack = ImmutableStack.create(new NodePosition<T, S>(node, 0));
         }
@@ -75,7 +75,7 @@ class Search {
 
     }
 
-    static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> search(
+    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> search(
             final Predicate<? super Geometry> condition, Entry<T, S>[] result,
             ImmutableStack<NodePosition<T, S>> stack) {
         while (!stack.isEmpty()) {
@@ -99,11 +99,16 @@ class Search {
     private static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> searchLeaf(
             final Predicate<? super Geometry> condition, Entry<T, S>[] result,
             ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
-        Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(np.position());
-        if (condition.test(entry.geometry())) {
-            result[0] = entry;
-        }
-        return stack.pop().push(np.nextPosition());
+        int i = np.position();
+        do {
+            Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(i);
+            if (condition.test(entry.geometry())) {
+                result[0] = entry;
+                return stack.pop().push(np.position(i + 1));
+            }
+            i++;
+        } while (i < np.node().count());
+        return stack.pop().push(np.position(i));
     }
 
     private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
