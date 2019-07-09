@@ -314,5 +314,13 @@ public class BenchmarksRTree {
             return tree.add(new Object(), Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
         }
     }
+    
+    public static void main(String[] args) {
+        BenchmarksRTree b = new BenchmarksRTree();
+        Rectangle r = searchRectangle();
+        while (true) {
+            assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
+        }
+    }
 
 }
