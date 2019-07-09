@@ -2,7 +2,9 @@ package com.github.davidmoten.rtree;
 
 import static com.github.davidmoten.rtree.Utilities.entries1000;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
@@ -314,13 +316,24 @@ public class BenchmarksRTree {
             return tree.add(new Object(), Geometries.point((float) Math.random() * 1000, (float) Math.random() * 1000));
         }
     }
-    
+
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         Rectangle r = searchRectangle();
+        long t = System.currentTimeMillis();
+        long count = 0;
         while (true) {
             assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
+            count++;
+            if (count % 10000 == 0) {
+                if (System.currentTimeMillis() - t > TimeUnit.SECONDS.toMillis(10)) {
+                    break;
+                }
+            }
         }
+        double ratePerSecond = count * 60000.0 / (System.currentTimeMillis() - t);
+        DecimalFormat df = new DecimalFormat("0.000");
+        System.out.println("ratePerSecond=" + df.format(ratePerSecond / 1000000.0) + "m");
     }
 
 }
