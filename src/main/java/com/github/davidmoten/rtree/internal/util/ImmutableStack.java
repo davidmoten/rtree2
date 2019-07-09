@@ -1,32 +1,26 @@
 package com.github.davidmoten.rtree.internal.util;
 
-import static com.github.davidmoten.guavamini.Optional.of;
-
 import java.util.Iterator;
-
-import com.github.davidmoten.guavamini.Optional;
+import java.util.NoSuchElementException;
 
 public final class ImmutableStack<T> implements Iterable<T> {
-    private final Optional<T> head;
-    private final Optional<ImmutableStack<T>> tail;
+
+    private final T head;
+    private final ImmutableStack<T> tail;
 
     private static ImmutableStack<?> EMPTY = new ImmutableStack<Object>();
 
-    public ImmutableStack(final T head, final ImmutableStack<T> tail) {
-        this(of(head), of(tail));
-    }
-
-    private ImmutableStack(Optional<T> head, Optional<ImmutableStack<T>> tail) {
+    private ImmutableStack(T head, ImmutableStack<T> tail) {
         this.head = head;
         this.tail = tail;
     }
 
     public static <T> ImmutableStack<T> create(T t) {
-        return new ImmutableStack<T>(of(t), of(ImmutableStack.<T> empty()));
+        return new ImmutableStack<T>(t, empty());
     }
 
     public ImmutableStack() {
-        this(Optional.<T> absent(), Optional.<ImmutableStack<T>> absent());
+        this(null, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -35,21 +29,21 @@ public final class ImmutableStack<T> implements Iterable<T> {
     }
 
     public boolean isEmpty() {
-        return !head.isPresent();
+        return head == null;
     }
 
     public T peek() {
-        // if (isEmpty())
-        // throw new RuntimeException("cannot peek on empty stack");
-        // else
-        return this.head.get();
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        return head;
     }
 
     public ImmutableStack<T> pop() {
-        // if (isEmpty())
-        // throw new RuntimeException("cannot pop on empty stack");
-        // else
-        return this.tail.get();
+        if (tail == null) {
+            throw new NoSuchElementException();
+        }
+        return tail;
     }
 
     public ImmutableStack<T> push(T value) {
