@@ -321,17 +321,24 @@ public class BenchmarksRTree {
         BenchmarksRTree b = new BenchmarksRTree();
         Rectangle r = searchRectangle();
         long t = System.currentTimeMillis();
+        long warmupTimeSeconds = 10;
+        long benchmarkTimeSeconds = 10;
+        long t2 = -1;
         long count = 0;
         while (true) {
             assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
             count++;
             if (count % 10000 == 0) {
-                if (System.currentTimeMillis() - t > TimeUnit.SECONDS.toMillis(10)) {
+                if (t2 == -1) {
+                    if (System.currentTimeMillis() - t > TimeUnit.SECONDS.toMillis(warmupTimeSeconds)) {
+                        t2 = System.currentTimeMillis();
+                    }
+                } else if (System.currentTimeMillis() - t2 > TimeUnit.SECONDS.toMillis(benchmarkTimeSeconds)) {
                     break;
                 }
             }
         }
-        double ratePerSecond = count * 60000.0 / (System.currentTimeMillis() - t);
+        double ratePerSecond = count * 1000.0 / (System.currentTimeMillis() - t2);
         DecimalFormat df = new DecimalFormat("0.000");
         System.out.println("ratePerSecond=" + df.format(ratePerSecond / 1000000.0) + "m");
     }
