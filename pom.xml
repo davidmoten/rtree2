@@ -179,6 +179,10 @@
                                         <classpath />
                                         <argument>org.openjdk.jmh.Main</argument>
                                         <!-- -h for help -->
+				        <argument>-w</argument>
+                                        <argument>2</argument>
+                                        <argument>-r</argument>
+                                        <argument>2</argument>
                                         <argument>-f</argument>
                                         <argument>1</argument>
                                         <argument>-i</argument>
