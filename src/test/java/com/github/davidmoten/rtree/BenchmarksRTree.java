@@ -22,25 +22,25 @@ public class BenchmarksRTree {
 
     private static final Rectangle DEFAULT_GREEK_RECTANGLE = Geometries.rectangle(40, 27.0, 40.5, 27.5);
 
-    private final static Precision precision = Precision.DOUBLE;
+    private static final Precision precision = Precision.DOUBLE;
 
-    private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(precision);
+    private static final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(precision);
 
-    private final List<Entry<Object, Rectangle>> some = entries1000(precision);
+    private static final List<Entry<Object, Rectangle>> some = entries1000(precision);
 
-    private final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> defaultTreeM4 = RTree.maxChildren(4).<Object, Point>create().add(entries);
 
-    private final RTree<Object, Point> defaultTreeM10 = RTree.maxChildren(10).<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> defaultTreeM10 = RTree.maxChildren(10).<Object, Point>create().add(entries);
 
-    private final RTree<Object, Point> starTreeM4 = RTree.maxChildren(4).star().<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> starTreeM4 = RTree.maxChildren(4).star().<Object, Point>create().add(entries);
 
-    private final RTree<Object, Point> starTreeM10 = RTree.maxChildren(10).star().<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> starTreeM10 = RTree.maxChildren(10).star().<Object, Point>create().add(entries);
 
-    private final RTree<Object, Point> defaultTreeM32 = RTree.maxChildren(32).<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> defaultTreeM32 = RTree.maxChildren(32).<Object, Point>create().add(entries);
 
-    private final RTree<Object, Point> starTreeM32 = RTree.maxChildren(32).star().<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> starTreeM32 = RTree.maxChildren(32).star().<Object, Point>create().add(entries);
 
-    private final RTree<Object, Point> defaultTreeM128 = RTree.maxChildren(128).<Object, Point>create().add(entries);
+    private static final RTree<Object, Point> defaultTreeM128 = RTree.maxChildren(128).<Object, Point>create().add(entries);
 
     private final RTree<Object, Point> starTreeM128 = RTree.maxChildren(128).star().<Object, Point>create()
             .add(entries);
