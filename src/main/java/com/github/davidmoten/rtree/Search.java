@@ -73,7 +73,7 @@ final class Search {
             Deque<NodePosition<T, S>> stack) {
         while (!stack.isEmpty()) {
             NodePosition<T, S> np = stack.peek();
-            if (np.position() == np.node().count()) {
+            if (!np.hasRemaining()) {
                 // handle after last in node
                 searchAfterLastInNode(stack);
             } else if (np.node() instanceof NonLeaf) {

@@ -1,0 +1,11 @@
+Benchmark                                                        Mode  Cnt       Score       Error  Units
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren004       thrpt   10  379707.214 ±  5051.457  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren010       thrpt   10  432378.781 ± 19724.444  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren032       thrpt   10  479551.037 ± 12211.509  ops/s
+BenchmarksRTree.rStarTreeSearchOf1000PointsMaxChildren128       thrpt   10  771943.118 ± 17910.539  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004  thrpt   10  250222.446 ±  7942.402  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010  thrpt   10  265080.658 ±  3885.520  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032  thrpt   10  349718.147 ± 10866.136  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128  thrpt   10  207320.705 ± 12077.779  ops/s
+BenchmarksRTree.searchNearestGreek                              thrpt   10    3752.977 ±   101.746  ops/s
+
