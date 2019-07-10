@@ -13,7 +13,7 @@ public class NodePositionTest {
     public void testToString() {
         @SuppressWarnings("unchecked")
         Node<Object, Rectangle> node = Mockito.mock(Node.class);
-        assertTrue(new NodePositionMutable<Object, Rectangle>(node, 1).toString()
+        assertTrue(new NodePosition<Object, Rectangle>(node, 1).toString()
                 .startsWith("NodePosition ["));
     }
 

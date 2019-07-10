@@ -35,13 +35,13 @@ final class Search {
     static final class SearchIterator<T, S extends Geometry> implements Iterator<Entry<T, S>> {
 
         private final Predicate<? super Geometry> condition;
-        private final Deque<NodePositionMutable<T, S>> stack;
+        private final Deque<NodePosition<T, S>> stack;
         private Entry<T, S> next;
 
         SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.condition = condition;
-            this.stack = new ArrayDeque<NodePositionMutable<T, S>>();
-            stack.push(new NodePositionMutable<T, S>(node, 0));
+            this.stack = new ArrayDeque<NodePosition<T, S>>();
+            stack.push(new NodePosition<T, S>(node, 0));
         }
 
         @Override
@@ -74,10 +74,10 @@ final class Search {
     }
 
     private static <S extends Geometry, T> Entry<T, S> search(final Predicate<? super Geometry> condition,
-            Deque<NodePositionMutable<T, S>> stack) {
+            Deque<NodePosition<T, S>> stack) {
         Entry<T, S> v = null;
         while (!stack.isEmpty()) {
-            NodePositionMutable<T, S> np = stack.peek();
+            NodePosition<T, S> np = stack.peek();
             if (v != null) {
                 return v;
             } else if (np.position() == np.node().count()) {
@@ -95,7 +95,7 @@ final class Search {
     }
 
     private static <T, S extends Geometry> Entry<T, S> searchLeaf(final Predicate<? super Geometry> condition,
-            NodePositionMutable<T, S> np) {
+            NodePosition<T, S> np) {
         int i = np.position();
         do {
             Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(i);
@@ -110,19 +110,19 @@ final class Search {
     }
 
     private static <S extends Geometry, T> void searchNonLeaf(final Predicate<? super Geometry> condition,
-            Deque<NodePositionMutable<T, S>> stack, NodePositionMutable<T, S> np) {
+            Deque<NodePosition<T, S>> stack, NodePosition<T, S> np) {
         Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
         if (condition.test(child.geometry())) {
-            stack.push(new NodePositionMutable<T, S>(child, 0));
+            stack.push(new NodePosition<T, S>(child, 0));
         } else {
-            stack.peek().setPosition(np.position() + 1);
+            np.setPosition(np.position() + 1);
         }
     }
 
-    private static <S extends Geometry, T> void searchAfterLastInNode(Deque<NodePositionMutable<T, S>> stack) {
+    private static <S extends Geometry, T> void searchAfterLastInNode(Deque<NodePosition<T, S>> stack) {
         stack.pop();
         if (!stack.isEmpty()) {
-            NodePositionMutable<T, S> previous = stack.peek();
+            NodePosition<T, S> previous = stack.peek();
             previous.setPosition(previous.position() + 1);
         }
     }
