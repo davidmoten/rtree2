@@ -80,10 +80,10 @@ public final class EntryDefault<T, S extends Geometry> implements Entry<T, S> {
     @Override
     public boolean equals(Object obj) {
         @SuppressWarnings("rawtypes")
-        Optional<EntryDefault> other = ObjectsHelper.asClass(obj, EntryDefault.class);
-        if (other.isPresent()) {
-            return Objects.equal(value, other.get().value)
-                    && Objects.equal(geometry, other.get().geometry);
+        EntryDefault other = ObjectsHelper.asClass(obj, EntryDefault.class);
+        if (other != null) {
+            return Objects.equal(value, other.value)
+                    && Objects.equal(geometry, other.geometry);
         } else
             return false;
     }

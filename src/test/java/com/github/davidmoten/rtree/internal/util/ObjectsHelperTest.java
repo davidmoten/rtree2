@@ -1,7 +1,7 @@
 package com.github.davidmoten.rtree.internal.util;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -9,17 +9,17 @@ public class ObjectsHelperTest {
 
     @Test
     public void testAsClassIsAbsentIfNull() {
-        assertFalse(ObjectsHelper.asClass(null, Integer.class).isPresent());
+        assertNull(ObjectsHelper.asClass(null, Integer.class));
     }
 
     @Test
     public void testAsClassIsAbsentIfDifferentClass() {
-        assertFalse(ObjectsHelper.asClass(1, String.class).isPresent());
+        assertNull(ObjectsHelper.asClass(1, String.class));
     }
 
     @Test
     public void testAsClassIsPresentIfSameTypeAndNotNull() {
-        assertTrue(ObjectsHelper.asClass(1, Integer.class).isPresent());
+        assertNotNull(ObjectsHelper.asClass(1, Integer.class));
     }
 
     @Test

@@ -1,7 +1,5 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
-import java.util.Optional;
-
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Line;
@@ -68,10 +66,10 @@ public final class CircleDouble implements Circle {
 
     @Override
     public boolean equals(Object obj) {
-        Optional<CircleDouble> other = ObjectsHelper.asClass(obj, CircleDouble.class);
-        if (other.isPresent()) {
-            return Objects.equal(x, other.get().x) && Objects.equal(y, other.get().y)
-                    && Objects.equal(radius, other.get().radius);
+        CircleDouble other = ObjectsHelper.asClass(obj, CircleDouble.class);
+        if (other!=null) {
+            return Objects.equal(x, other.x) && Objects.equal(y, other.y)
+                    && Objects.equal(radius, other.radius);
         } else
             return false;
     }

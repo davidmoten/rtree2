@@ -122,10 +122,10 @@ public final class LineDouble implements Line {
 
     @Override
     public boolean equals(Object obj) {
-        Optional<LineDouble> other = ObjectsHelper.asClass(obj, LineDouble.class);
-        if (other.isPresent()) {
-            return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
-                    && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
+        LineDouble other = ObjectsHelper.asClass(obj, LineDouble.class);
+        if (other != null) {
+            return Objects.equal(x1, other.x1) && Objects.equal(x2, other.x2)
+                    && Objects.equal(y1, other.y1) && Objects.equal(y2, other.y2);
         } else
             return false;
     }

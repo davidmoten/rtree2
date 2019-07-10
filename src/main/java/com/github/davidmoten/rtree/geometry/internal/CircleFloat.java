@@ -68,10 +68,10 @@ public final class CircleFloat implements Circle {
 
     @Override
     public boolean equals(Object obj) {
-        Optional<CircleFloat> other = ObjectsHelper.asClass(obj, CircleFloat.class);
-        if (other.isPresent()) {
-            return Objects.equal(x, other.get().x) && Objects.equal(y, other.get().y)
-                    && Objects.equal(radius, other.get().radius);
+        CircleFloat other = ObjectsHelper.asClass(obj, CircleFloat.class);
+        if (other != null) {
+            return Objects.equal(x, other.x) && Objects.equal(y, other.y)
+                    && Objects.equal(radius, other.radius);
         } else
             return false;
     }
