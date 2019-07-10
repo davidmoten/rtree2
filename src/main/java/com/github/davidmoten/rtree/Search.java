@@ -64,64 +64,62 @@ final class Search {
 
         private void load() {
             if (next == null) {
-                next = search(condition, stack);
+                next = search();
             }
         }
-    }
 
-    private static <S extends Geometry, T> Entry<T, S> search(final Predicate<? super Geometry> condition,
-            Deque<NodePosition<T, S>> stack) {
-        while (!stack.isEmpty()) {
-            NodePosition<T, S> np = stack.peek();
-            if (!np.hasRemaining()) {
-                // handle after last in node
-                searchAfterLastInNode(stack);
-            } else if (np.node() instanceof NonLeaf) {
-                // handle non-leaf
-                searchNonLeaf(condition, stack, np);
-            } else {
-                // handle leaf
-                Entry<T, S> v = searchLeaf(condition, np);
-                if (v != null) {
-                    return v;
+        private Entry<T, S> search() {
+            while (!stack.isEmpty()) {
+                NodePosition<T, S> np = stack.peek();
+                if (!np.hasRemaining()) {
+                    // handle after last in node
+                    searchAfterLastInNode();
+                } else if (np.node() instanceof NonLeaf) {
+                    // handle non-leaf
+                    searchNonLeaf(np);
+                } else {
+                    // handle leaf
+                    Entry<T, S> v = searchLeaf(np);
+                    if (v != null) {
+                        return v;
+                    }
                 }
             }
+            return null;
         }
-        return null;
-    }
 
-    private static <T, S extends Geometry> Entry<T, S> searchLeaf(final Predicate<? super Geometry> condition,
-            NodePosition<T, S> np) {
-        int i = np.position();
-        Leaf<T, S> leaf = ((Leaf<T, S>) np.node());
-        do {
-            Entry<T, S> entry = leaf.entry(i);
-            if (condition.test(entry.geometry())) {
-                np.setPosition(i + 1);
-                return entry;
+        private Entry<T, S> searchLeaf(NodePosition<T, S> np) {
+            int i = np.position();
+            Leaf<T, S> leaf = ((Leaf<T, S>) np.node());
+            do {
+                Entry<T, S> entry = leaf.entry(i);
+                if (condition.test(entry.geometry())) {
+                    np.setPosition(i + 1);
+                    return entry;
+                }
+                i++;
+            } while (i < np.node().count());
+            np.setPosition(i);
+            return null;
+        }
+
+        private void searchNonLeaf(NodePosition<T, S> np) {
+            Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
+            if (condition.test(child.geometry())) {
+                stack.push(new NodePosition<T, S>(child, 0));
+            } else {
+                np.setPosition(np.position() + 1);
             }
-            i++;
-        } while (i < np.node().count());
-        np.setPosition(i);
-        return null;
-    }
-
-    private static <S extends Geometry, T> void searchNonLeaf(final Predicate<? super Geometry> condition,
-            Deque<NodePosition<T, S>> stack, NodePosition<T, S> np) {
-        Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
-        if (condition.test(child.geometry())) {
-            stack.push(new NodePosition<T, S>(child, 0));
-        } else {
-            np.setPosition(np.position() + 1);
         }
-    }
 
-    private static <S extends Geometry, T> void searchAfterLastInNode(Deque<NodePosition<T, S>> stack) {
-        stack.pop();
-        if (!stack.isEmpty()) {
-            NodePosition<T, S> previous = stack.peek();
-            previous.setPosition(previous.position() + 1);
+        private void searchAfterLastInNode() {
+            stack.pop();
+            if (!stack.isEmpty()) {
+                NodePosition<T, S> previous = stack.peek();
+                previous.setPosition(previous.position() + 1);
+            }
         }
+
     }
 
 }
