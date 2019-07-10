@@ -1,12 +1,12 @@
 package com.github.davidmoten.rtree.internal;
 
-import static com.github.davidmoten.guavamini.Optional.of;
+import static java.util.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
@@ -92,7 +92,7 @@ public final class NonLeafHelper {
             List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
             nodes.addAll(addTheseNodes);
             if (nodes.size() == 0)
-                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), addTheseEntries,
+                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> empty(), addTheseEntries,
                         countDeleted);
             else {
                 NonLeaf<T, S> nd = node.context().factory().createNonLeaf(nodes, node.context());

@@ -1,20 +1,20 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.guavamini.Optional.absent;
-import static com.github.davidmoten.guavamini.Optional.of;
 import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import com.github.davidmoten.guavamini.Lists;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -72,7 +72,7 @@ public final class RTree<T, S extends Geometry> {
     }
 
     private RTree() {
-        this(Optional.<Node<T, S>>absent(), 0, null);
+        this(Optional.<Node<T, S>>empty(), 0, null);
     }
 
     /**
@@ -217,8 +217,8 @@ public final class RTree<T, S extends Geometry> {
          */
         private static final double DEFAULT_FILLING_FACTOR = 0.4;
         private static final double DEFAULT_LOADING_FACTOR = 0.7;
-        private Optional<Integer> maxChildren = absent();
-        private Optional<Integer> minChildren = absent();
+        private Optional<Integer> maxChildren = empty();
+        private Optional<Integer> minChildren = empty();
         private Splitter splitter = new SplitterQuadratic();
         private Selector selector = new SelectorMinimalAreaIncrease();
         private double loadingFactor;
@@ -327,9 +327,8 @@ public final class RTree<T, S extends Geometry> {
         public <T, S extends Geometry> RTree<T, S> create() {
             setDefaultCapacity();
 
-            return new RTree<T, S>(Optional.<Node<T, S>>absent(), 0,
-                    new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
-                            (Factory<T, S>) factory));
+            return new RTree<T, S>(Optional.<Node<T, S>>empty(), 0, new Context<T, S>(minChildren.get(),
+                    maxChildren.get(), selector, splitter, (Factory<T, S>) factory));
         }
 
         /**
@@ -349,8 +348,8 @@ public final class RTree<T, S extends Geometry> {
         public <T, S extends Geometry> RTree<T, S> create(List<Entry<T, S>> entries) {
             setDefaultCapacity();
 
-            Context<T, S> context = new Context<T, S>(minChildren.get(), maxChildren.get(),
-                    selector, splitter, (Factory<T, S>) factory);
+            Context<T, S> context = new Context<T, S>(minChildren.get(), maxChildren.get(), selector, splitter,
+                    (Factory<T, S>) factory);
             return packingSTR(entries, true, entries.size(), context);
         }
 
@@ -365,8 +364,8 @@ public final class RTree<T, S extends Geometry> {
         }
 
         @SuppressWarnings("unchecked")
-        private <T, S extends Geometry> RTree<T, S> packingSTR(List<? extends HasGeometry> objects,
-                boolean isLeaf, int size, Context<T, S> context) {
+        private <T, S extends Geometry> RTree<T, S> packingSTR(List<? extends HasGeometry> objects, boolean isLeaf,
+                int size, Context<T, S> context) {
             int capacity = (int) Math.round(maxChildren.get() * loadingFactor);
             int nodeCount = (int) Math.ceil(1.0 * objects.size() / capacity);
 
@@ -390,19 +389,16 @@ public final class RTree<T, S extends Geometry> {
             List<Node<T, S>> nodes = new ArrayList<Node<T, S>>(nodeCount);
             for (int s = 0; s < sliceCount; s++) {
                 @SuppressWarnings("rawtypes")
-                List slice = objects.subList(s * sliceCapacity,
-                        Math.min((s + 1) * sliceCapacity, objects.size()));
+                List slice = objects.subList(s * sliceCapacity, Math.min((s + 1) * sliceCapacity, objects.size()));
                 Collections.sort(slice, new MidComparator((short) 1));
 
                 for (int i = 0; i < slice.size(); i += capacity) {
                     if (isLeaf) {
-                        List<Entry<T, S>> entries = slice.subList(i,
-                                Math.min(slice.size(), i + capacity));
+                        List<Entry<T, S>> entries = slice.subList(i, Math.min(slice.size(), i + capacity));
                         Node<T, S> leaf = context.factory().createLeaf(entries, context);
                         nodes.add(leaf);
                     } else {
-                        List<Node<T, S>> children = slice.subList(i,
-                                Math.min(slice.size(), i + capacity));
+                        List<Node<T, S>> children = slice.subList(i, Math.min(slice.size(), i + capacity));
                         Node<T, S> nonleaf = context.factory().createNonLeaf(children, context);
                         nodes.add(nonleaf);
                     }
@@ -454,8 +450,7 @@ public final class RTree<T, S extends Geometry> {
             }
             return new RTree<T, S>(node, size + 1, context);
         } else {
-            Leaf<T, S> node = context.factory().createLeaf(Lists.newArrayList((Entry<T, S>) entry),
-                    context);
+            Leaf<T, S> node = context.factory().createLeaf(Lists.newArrayList((Entry<T, S>) entry), context);
             return new RTree<T, S>(node, size + 1, context);
         }
     }
@@ -576,8 +571,8 @@ public final class RTree<T, S extends Geometry> {
                 return this;
             else
                 return new RTree<T, S>(nodeAndEntries.node(),
-                        size - nodeAndEntries.countDeleted() - nodeAndEntries.entriesToAdd().size(),
-                        context).add(nodeAndEntries.entriesToAdd());
+                        size - nodeAndEntries.countDeleted() - nodeAndEntries.entriesToAdd().size(), context)
+                                .add(nodeAndEntries.entriesToAdd());
         } else
             return this;
     }
@@ -682,7 +677,7 @@ public final class RTree<T, S extends Geometry> {
     public Iterable<Entry<T, S>> search(Line line) {
         return search(line, Intersects.geometryIntersectsLine);
     }
-    
+
     /**
      * Returns the intersections with the the given (arbitrary) geometry using an
      * intersection function to filter the search results returned from a search of
@@ -698,8 +693,7 @@ public final class RTree<T, S extends Geometry> {
      */
     public <R extends Geometry> Iterable<Entry<T, S>> search(final R g,
             final BiPredicate<? super S, ? super R> intersects) {
-        return Iterables.filter(search(g.mbr()),entry -> 
-                intersects.test(entry.geometry(), g));
+        return Iterables.filter(search(g.mbr()), entry -> intersects.test(entry.geometry(), g));
     }
 
     /**
@@ -722,10 +716,6 @@ public final class RTree<T, S extends Geometry> {
         });
     }
 
-   
-
-   
-
     /**
      * Returns an {@link Iterable} sequence of all {@link Entry}s in the R-tree
      * whose minimum bounding rectangles are within maxDistance from the given
@@ -740,7 +730,7 @@ public final class RTree<T, S extends Geometry> {
     public Iterable<Entry<T, S>> search(final Point p, final double maxDistance) {
         return search(p.mbr(), maxDistance);
     }
-    
+
     /**
      * Returns all entries strictly less than <code>maxDistance</code> from the
      * given geometry. Because the geometry may be of an arbitrary type it is
@@ -764,7 +754,6 @@ public final class RTree<T, S extends Geometry> {
                 entry -> distance.apply(entry.geometry(), g) < maxDistance);
     }
 
-
     /**
      * Returns the nearest k entries (k=maxCount) to the given rectangle where the
      * entries are strictly less than a given maximum distance from the rectangle.
@@ -777,10 +766,10 @@ public final class RTree<T, S extends Geometry> {
      *            max number of entries to return
      * @return nearest entries to maxCount, in ascending order of distance
      */
-    public Iterable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance,
-            int maxCount) {
-        BoundedPriorityQueue<Entry<T, S>> q = new BoundedPriorityQueue<Entry<T,S>>(maxCount, Comparators.<T, S>ascendingDistance(r));
-        for (Entry<T, S> entry: search(r, maxDistance)) {
+    public Iterable<Entry<T, S>> nearest(final Rectangle r, final double maxDistance, int maxCount) {
+        BoundedPriorityQueue<Entry<T, S>> q = new BoundedPriorityQueue<Entry<T, S>>(maxCount,
+                Comparators.<T, S>ascendingDistance(r));
+        for (Entry<T, S> entry : search(r, maxDistance)) {
             q.add(entry);
         }
         return q.asOrderedList();
@@ -850,13 +839,13 @@ public final class RTree<T, S extends Geometry> {
         Rectangle r = null;
         while (it.hasNext()) {
             Entry<T, S> entry = it.next();
-            if (r!= null)
+            if (r != null)
                 r = r.add(entry.geometry().mbr());
             else
                 r = entry.geometry().mbr();
         }
         if (r == null) {
-            return rectangle(0,0,0,0);
+            return rectangle(0, 0, 0, 0);
         } else {
             return r;
         }
@@ -874,7 +863,7 @@ public final class RTree<T, S extends Geometry> {
      */
     public Optional<Rectangle> mbr() {
         if (!root.isPresent())
-            return absent();
+            return Optional.empty();
         else
             return of(root.get().geometry().mbr());
     }

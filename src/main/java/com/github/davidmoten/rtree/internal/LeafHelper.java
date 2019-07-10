@@ -1,12 +1,12 @@
 package com.github.davidmoten.rtree.internal;
 
-import static com.github.davidmoten.guavamini.Optional.of;
+import static java.util.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
@@ -38,7 +38,7 @@ public final class LeafHelper {
                 return new NodeAndEntries<T, S>(of(node), Collections.<Entry<T, S>> emptyList(),
                         numDeleted);
             } else {
-                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), entries2,
+                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> empty(), entries2,
                         numDeleted);
             }
         }

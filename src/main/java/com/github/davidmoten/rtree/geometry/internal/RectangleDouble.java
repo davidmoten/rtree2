@@ -1,7 +1,8 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
+import java.util.Optional;
+
 import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;

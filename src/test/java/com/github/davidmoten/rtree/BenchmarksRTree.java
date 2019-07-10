@@ -3,7 +3,6 @@ package com.github.davidmoten.rtree;
 import static com.github.davidmoten.rtree.Utilities.entries1000;
 
 import java.text.DecimalFormat;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

@@ -1,7 +1,8 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
+import java.util.Optional;
+
 import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.geometry.Circle;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Line;

@@ -1,13 +1,13 @@
 package com.github.davidmoten.rtree;
 
-import static com.github.davidmoten.guavamini.Optional.absent;
-import static com.github.davidmoten.guavamini.Optional.of;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.davidmoten.guavamini.Lists;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 import com.github.davidmoten.rtree.geometry.HasGeometry;
@@ -56,8 +56,8 @@ public final class SplitterQuadratic implements Splitter {
         final Rectangle mbr2 = Util.mbr(group2);
         final T item1 = getBestCandidateForGroup(remaining, group1, mbr1);
         final T item2 = getBestCandidateForGroup(remaining, group2, mbr2);
-        final boolean area1LessThanArea2 = item1.geometry().mbr().add(mbr1).area() <= item2
-                .geometry().mbr().add(mbr2).area();
+        final boolean area1LessThanArea2 = item1.geometry().mbr().add(mbr1).area() <= item2.geometry().mbr().add(mbr2)
+                .area();
 
         if (area1LessThanArea2 && (group2.size() + remaining.size() - 1 >= minGroupSize)
                 || !area1LessThanArea2 && (group1.size() + remaining.size() == minGroupSize)) {
@@ -70,11 +70,10 @@ public final class SplitterQuadratic implements Splitter {
     }
 
     @VisibleForTesting
-    static <T extends HasGeometry> T getBestCandidateForGroup(List<T> list, List<T> group,
-            Rectangle groupMbr) {
+    static <T extends HasGeometry> T getBestCandidateForGroup(List<T> list, List<T> group, Rectangle groupMbr) {
         // TODO reduce allocations by not using Optional
-        Optional<T> minEntry = absent();
-        Optional<Double> minArea = absent();
+        Optional<T> minEntry = empty();
+        Optional<Double> minArea = empty();
         for (final T entry : list) {
             final double area = groupMbr.add(entry.geometry().mbr()).area();
             if (!minArea.isPresent() || area < minArea.get()) {
@@ -87,11 +86,11 @@ public final class SplitterQuadratic implements Splitter {
 
     @VisibleForTesting
     static <T extends HasGeometry> Pair<T> worstCombination(List<T> items) {
-        //TODO reduce allocations by not using Optional
-        Optional<T> e1 = absent();
-        Optional<T> e2 = absent();
+        // TODO reduce allocations by not using Optional
+        Optional<T> e1 = empty();
+        Optional<T> e2 = empty();
         {
-            Optional<Double> maxArea = absent();
+            Optional<Double> maxArea = empty();
             for (int i = 0; i < items.size(); i++) {
                 for (int j = i + 1; j < items.size(); j++) {
                     T entry1 = items.get(i);

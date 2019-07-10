@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree.internal.util;
 
-import com.github.davidmoten.guavamini.Optional;
+import java.util.Optional;
+
 import com.github.davidmoten.guavamini.annotations.VisibleForTesting;
 
 public final class ObjectsHelper {
@@ -17,9 +18,9 @@ public final class ObjectsHelper {
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> asClass(Object object, Class<T> cls) {
         if (object == null)
-            return Optional.absent();
+            return Optional.empty();
         else if (object.getClass() != cls)
-            return Optional.absent();
+            return Optional.empty();
         else
             return Optional.of((T) object);
     }
