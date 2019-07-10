@@ -1,11 +1,12 @@
 package com.github.davidmoten.rtree;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 import com.github.davidmoten.rtree.geometry.Geometry;
-import com.github.davidmoten.rtree.internal.util.ImmutableStack;
 
 final class Search {
 
@@ -34,12 +35,13 @@ final class Search {
     static final class SearchIterator<T, S extends Geometry> implements Iterator<Entry<T, S>> {
 
         private final Predicate<? super Geometry> condition;
-        private ImmutableStack<NodePosition<T, S>> stack;
+        private final Deque<NodePositionMutable<T, S>> stack;
         private Entry<T, S> next;
 
         SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.condition = condition;
-            this.stack = ImmutableStack.create(new NodePosition<T, S>(node, 0));
+            this.stack = new ArrayDeque<NodePositionMutable<T, S>>();
+            stack.push(new NodePositionMutable<T, S>(node, 0));
         }
 
         @Override
@@ -62,77 +64,67 @@ final class Search {
 
         private void load() {
             if (next == null && stack != null) {
-                @SuppressWarnings("unchecked")
-                Entry<T, S>[] result = new Entry[1];
-                stack = search(condition, result, stack);
+                next = search(condition, stack);
                 if (stack.isEmpty()) {
-                    stack = null;
                     return;
                 }
-                next = result[0];
             }
         }
 
     }
 
-    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> search(
-            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
-            ImmutableStack<NodePosition<T, S>> stack) {
+    private static <S extends Geometry, T> Entry<T, S> search(final Predicate<? super Geometry> condition,
+            Deque<NodePositionMutable<T, S>> stack) {
+        Entry<T, S> v = null;
         while (!stack.isEmpty()) {
-            NodePosition<T, S> np = stack.peek();
-            if (result[0] != null)
-                return stack;
-            else if (np.position() == np.node().count()) {
+            NodePositionMutable<T, S> np = stack.peek();
+            if (v != null) {
+                return v;
+            } else if (np.position() == np.node().count()) {
                 // handle after last in node
-                stack = searchAfterLastInNode(stack);
+                searchAfterLastInNode(stack);
             } else if (np.node() instanceof NonLeaf) {
                 // handle non-leaf
-                stack = searchNonLeaf(condition, stack, np);
+                searchNonLeaf(condition, stack, np);
             } else {
                 // handle leaf
-                stack = searchLeaf(condition, result, stack, np);
+                v = searchLeaf(condition, np);
             }
         }
-        return stack;
+        return v;
     }
 
-    private static <T, S extends Geometry> ImmutableStack<NodePosition<T, S>> searchLeaf(
-            final Predicate<? super Geometry> condition, Entry<T, S>[] result,
-            ImmutableStack<NodePosition<T, S>> stack, NodePosition<T, S> np) {
+    private static <T, S extends Geometry> Entry<T, S> searchLeaf(final Predicate<? super Geometry> condition,
+            NodePositionMutable<T, S> np) {
         int i = np.position();
         do {
             Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(i);
             if (condition.test(entry.geometry())) {
-                result[0] = entry;
-                return stack.pop().push(np.position(i + 1));
+                np.setPosition(i + 1);
+                return entry;
             }
             i++;
         } while (i < np.node().count());
-        return stack.pop().push(np.position(i));
+        np.setPosition(i);
+        return null;
     }
 
-    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchNonLeaf(
-            final Predicate<? super Geometry> condition, ImmutableStack<NodePosition<T, S>> stack,
-            NodePosition<T, S> np) {
+    private static <S extends Geometry, T> void searchNonLeaf(final Predicate<? super Geometry> condition,
+            Deque<NodePositionMutable<T, S>> stack, NodePositionMutable<T, S> np) {
         Node<T, S> child = ((NonLeaf<T, S>) np.node()).child(np.position());
         if (condition.test(child.geometry())) {
-            stack = stack.push(new NodePosition<T, S>(child, 0));
+            stack.push(new NodePositionMutable<T, S>(child, 0));
         } else {
-            stack = stack.pop().push(np.nextPosition());
+            stack.peek().setPosition(np.position() + 1);
         }
-        return stack;
     }
 
-    private static <S extends Geometry, T> ImmutableStack<NodePosition<T, S>> searchAfterLastInNode(
-            ImmutableStack<NodePosition<T, S>> stack) {
-        ImmutableStack<NodePosition<T, S>> stack2 = stack.pop();
-        if (stack2.isEmpty())
-            stack = stack2;
-        else {
-            NodePosition<T, S> previous = stack2.peek();
-            stack = stack2.pop().push(previous.nextPosition());
+    private static <S extends Geometry, T> void searchAfterLastInNode(Deque<NodePositionMutable<T, S>> stack) {
+        stack.pop();
+        if (!stack.isEmpty()) {
+            NodePositionMutable<T, S> previous = stack.peek();
+            previous.setPosition(previous.position() + 1);
         }
-        return stack;
     }
 
 }
