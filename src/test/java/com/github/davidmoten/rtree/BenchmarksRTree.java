@@ -321,9 +321,9 @@ public class BenchmarksRTree {
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         Rectangle r = searchRectangle();
-        if (false) {
+        if (true) {
             while (true) {
-                if (Iterables.size(b.defaultTreeM10.search(r)) == 0) {
+                if (Iterables.size(b.starTreeM10.search(r)) == 0) {
                     System.out.println("unexpected");
                 }
             }

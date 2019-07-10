@@ -40,7 +40,7 @@ final class Search {
 
         SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.condition = condition;
-            this.stack = new ArrayDeque<NodePosition<T, S>>();
+            this.stack = new ArrayDeque<NodePosition<T, S>>(8);
             stack.push(new NodePosition<T, S>(node, 0));
         }
 
