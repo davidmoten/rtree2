@@ -11,8 +11,8 @@
         <version>0.1</version>
     </parent>
 
-    <artifactId>rtree2</artifactId>
-    <version>0.8.7-SNAPSHOT</version>
+    <artifactId>rtree</artifactId>
+    <version>0.9-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
