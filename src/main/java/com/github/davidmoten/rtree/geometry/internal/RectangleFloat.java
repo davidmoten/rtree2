@@ -3,8 +3,6 @@ package com.github.davidmoten.rtree.geometry.internal;
 import static com.github.davidmoten.rtree.geometry.internal.GeometryUtil.max;
 import static com.github.davidmoten.rtree.geometry.internal.GeometryUtil.min;
 
-import java.util.Optional;
-
 import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
