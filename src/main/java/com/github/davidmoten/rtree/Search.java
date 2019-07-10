@@ -70,17 +70,13 @@ final class Search {
                 }
             }
         }
-
     }
 
     private static <S extends Geometry, T> Entry<T, S> search(final Predicate<? super Geometry> condition,
             Deque<NodePosition<T, S>> stack) {
-        Entry<T, S> v = null;
         while (!stack.isEmpty()) {
             NodePosition<T, S> np = stack.peek();
-            if (v != null) {
-                return v;
-            } else if (np.position() == np.node().count()) {
+            if (np.position() == np.node().count()) {
                 // handle after last in node
                 searchAfterLastInNode(stack);
             } else if (np.node() instanceof NonLeaf) {
@@ -88,10 +84,13 @@ final class Search {
                 searchNonLeaf(condition, stack, np);
             } else {
                 // handle leaf
-                v = searchLeaf(condition, np);
+                Entry<T, S> v = searchLeaf(condition, np);
+                if (v != null) {
+                    return v;
+                }
             }
         }
-        return v;
+        return null;
     }
 
     private static <T, S extends Geometry> Entry<T, S> searchLeaf(final Predicate<? super Geometry> condition,
