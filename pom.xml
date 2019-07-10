@@ -11,7 +11,7 @@
         <version>0.1</version>
     </parent>
 
-    <artifactId>rtree</artifactId>
+    <artifactId>rtree2</artifactId>
     <version>0.9-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
