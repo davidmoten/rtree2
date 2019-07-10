@@ -3,6 +3,7 @@ package com.github.davidmoten.rtree;
 import static com.github.davidmoten.rtree.Utilities.entries1000;
 
 import java.text.DecimalFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -91,8 +92,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren004(Blackhole bh) {
-        searchGreek(defaultTreeM4, bh);
+    public long defaultRTreeSearchOfGreekDataPointsMaxChildren004() {
+        return searchGreek(defaultTreeM4);
     }
 
     @Benchmark
@@ -101,8 +102,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren010(Blackhole bh) {
-        searchGreek(defaultTreeM10, bh);
+    public long defaultRTreeSearchOfGreekDataPointsMaxChildren010() {
+        return searchGreek(defaultTreeM10);
     }
 
     @Benchmark
@@ -116,13 +117,13 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren004(Blackhole bh) {
-        searchGreek(starTreeM4, bh);
+    public long rStarTreeSearchOfGreekDataPointsMaxChildren004() {
+        return searchGreek(starTreeM4);
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren010(Blackhole bh) {
-        searchGreek(starTreeM10, bh);
+    public long rStarTreeSearchOfGreekDataPointsMaxChildren010() {
+        return searchGreek(starTreeM10);
     }
 
     @Benchmark
@@ -136,8 +137,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren032(Blackhole bh) {
-        searchGreek(defaultTreeM32, bh);
+    public long defaultRTreeSearchOfGreekDataPointsMaxChildren032() {
+        return searchGreek(defaultTreeM32);
     }
 
     @Benchmark
@@ -146,8 +147,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren032(Blackhole bh) {
-        searchGreek(starTreeM32, bh);
+    public long rStarTreeSearchOfGreekDataPointsMaxChildren032() {
+        return searchGreek(starTreeM32);
     }
 
     @Benchmark
@@ -156,8 +157,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOfGreekDataPointsMaxChildren128(Blackhole bh) {
-        searchGreek(defaultTreeM128, bh);
+    public long defaultRTreeSearchOfGreekDataPointsMaxChildren128() {
+        return searchGreek(defaultTreeM128);
     }
 
     @Benchmark
@@ -166,8 +167,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeSearchOfGreekDataPointsMaxChildren128(Blackhole bh) {
-        searchGreek(starTreeM128, bh);
+    public long rStarTreeSearchOfGreekDataPointsMaxChildren128() {
+        return searchGreek(starTreeM128);
     }
 
     @Benchmark
@@ -176,8 +177,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren004(Blackhole bh) {
-        search(smallDefaultTreeM4, bh);
+    public long defaultRTreeSearchOf1000PointsMaxChildren004() {
+        return search(smallDefaultTreeM4);
     }
 
     @Benchmark
@@ -186,8 +187,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren010(Blackhole bh) {
-        search(smallDefaultTreeM10, bh);
+    public long defaultRTreeSearchOf1000PointsMaxChildren010() {
+        return search(smallDefaultTreeM10);
     }
 
     @Benchmark
@@ -201,13 +202,13 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren004(Blackhole bh) {
-        search(smallStarTreeM4, bh);
+    public void rStarTreeSearchOf1000PointsMaxChildren004() {
+        search(smallStarTreeM4);
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren010(Blackhole bh) {
-        search(smallStarTreeM10, bh);
+    public long rStarTreeSearchOf1000PointsMaxChildren010() {
+        return search(smallStarTreeM10);
     }
 
     @Benchmark
@@ -216,8 +217,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren032(Blackhole bh) {
-        search(smallDefaultTreeM32, bh);
+    public long defaultRTreeSearchOf1000PointsMaxChildren032() {
+        return search(smallDefaultTreeM32);
     }
 
     @Benchmark
@@ -226,8 +227,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren032(Blackhole bh) {
-        search(smallStarTreeM32, bh);
+    public long rStarTreeSearchOf1000PointsMaxChildren032() {
+        return search(smallStarTreeM32);
     }
 
     @Benchmark
@@ -236,8 +237,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void defaultRTreeSearchOf1000PointsMaxChildren128(Blackhole bh) {
-        search(smallDefaultTreeM128, bh);
+    public long defaultRTreeSearchOf1000PointsMaxChildren128() {
+        return search(smallDefaultTreeM128);
     }
 
     @Benchmark
@@ -246,8 +247,8 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void rStarTreeSearchOf1000PointsMaxChildren128(Blackhole bh) {
-        search(smallStarTreeM128, bh);
+    public long rStarTreeSearchOf1000PointsMaxChildren128() {
+        return search(smallStarTreeM128);
     }
 
     @Benchmark
@@ -256,28 +257,35 @@ public class BenchmarksRTree {
     }
 
     @Benchmark
-    public void searchNearestGreek(Blackhole bh) {
-        searchNearestGreek(starTreeM4, bh);
+    public long searchNearestGreek() {
+        return searchNearestGreek(starTreeM4);
     }
 
     private RTree<Object, Point> deleteAll(RTree<Object, Point> tree) {
         return tree.delete(entries.get(1000), true);
     }
 
-    private void search(RTree<Object, Rectangle> tree, Blackhole bh) {
-        // returns 10 results
-        consume(tree.search(Geometries.rectangle(500, 500, 630, 630)), bh);
+    private long search(RTree<Object, Rectangle> tree) {
+        return search(tree, Geometries.rectangle(500, 500, 630, 630));
     }
 
-    private void searchGreek(RTree<Object, Point> tree, Blackhole bh) {
-        // should return 22 results
-        consume(tree.search(Geometries.rectangle(40, 27.0, 40.5, 27.5)), bh);
+    private long search(RTree<?, ?> tree, Rectangle r) {
+        return count(tree.search(r));
     }
 
-    private void consume(Iterable<?> iterable, Blackhole bh) {
-        for (Object o : iterable) {
-            bh.consume(o);
+    private static long count(Iterable<?> iterable) {
+        long count = 0;
+        Iterator<?> it = iterable.iterator();
+        while (it.hasNext()) {
+            it.next();
+            count++;
         }
+        return count;
+    }
+
+    private long searchGreek(RTree<Object, Point> tree) {
+        // should return 22 results
+        return search(tree, Geometries.rectangle(40, 27.0, 40.5, 27.5));
     }
 
     private static Rectangle searchRectangle() {
@@ -290,19 +298,19 @@ public class BenchmarksRTree {
         return r;
     }
 
-    private void searchNearestGreek(RTree<Object, Point> tree, Blackhole bh) {
+    private long searchNearestGreek(RTree<Object, Point> tree) {
         final Point p;
         if (precision == Precision.DOUBLE) {
             p = Geometries.point(40.0, 27.0);
         } else {
             p = Geometries.point(40.0f, 27.0f);
         }
-        consume(tree.nearest(p, 1, 300), bh);
+        return count(tree.nearest(p, 1, 300));
     }
 
-    private void searchGreekWithBackpressure(RTree<Object, Point> tree, final Blackhole bh) {
+    private long searchGreekWithBackpressure(RTree<Object, Point> tree, final Blackhole bh) {
         // should return 22 results
-        consume(tree.search(searchRectangle()), bh);
+        return search(tree, searchRectangle());
     }
 
     private RTree<Object, Rectangle> insertRectangle(RTree<Object, Rectangle> tree) {
@@ -320,27 +328,33 @@ public class BenchmarksRTree {
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         Rectangle r = searchRectangle();
-        long t = System.currentTimeMillis();
-        long warmupTimeSeconds = 10;
-        long benchmarkTimeSeconds = 10;
-        long t2 = -1;
-        long count = 0;
-        while (true) {
-            assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
-            count++;
-            if (count % 10000 == 0) {
-                if (t2 == -1) {
-                    if (System.currentTimeMillis() - t > TimeUnit.SECONDS.toMillis(warmupTimeSeconds)) {
-                        t2 = System.currentTimeMillis();
+        if (true) {
+            while (true) {
+                assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
+            }
+        } else {
+            long t = System.currentTimeMillis();
+            long warmupTimeSeconds = 10;
+            long benchmarkTimeSeconds = 10;
+            long t2 = -1;
+            long count = 0;
+            while (true) {
+                assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
+                count++;
+                if (count % 10000 == 0) {
+                    if (t2 == -1) {
+                        if (System.currentTimeMillis() - t > TimeUnit.SECONDS.toMillis(warmupTimeSeconds)) {
+                            t2 = System.currentTimeMillis();
+                        }
+                    } else if (System.currentTimeMillis() - t2 > TimeUnit.SECONDS.toMillis(benchmarkTimeSeconds)) {
+                        break;
                     }
-                } else if (System.currentTimeMillis() - t2 > TimeUnit.SECONDS.toMillis(benchmarkTimeSeconds)) {
-                    break;
                 }
             }
+            double ratePerSecond = count * 1000.0 / (System.currentTimeMillis() - t2);
+            DecimalFormat df = new DecimalFormat("0.000");
+            System.out.println("ratePerSecond=" + df.format(ratePerSecond / 1000000.0) + "m");
         }
-        double ratePerSecond = count * 1000.0 / (System.currentTimeMillis() - t2);
-        DecimalFormat df = new DecimalFormat("0.000");
-        System.out.println("ratePerSecond=" + df.format(ratePerSecond / 1000000.0) + "m");
     }
 
 }
