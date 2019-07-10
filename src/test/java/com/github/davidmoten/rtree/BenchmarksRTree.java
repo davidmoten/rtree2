@@ -19,6 +19,10 @@ import com.github.davidmoten.rtree.geometry.Rectangle;
 @State(Scope.Benchmark)
 public class BenchmarksRTree {
 
+    private static final Rectangle DEFAULT_1000_RECTANGLE = Geometries.rectangle(500, 500, 630, 630);
+
+    private static final Rectangle DEFAULT_GREEK_RECTANGLE = Geometries.rectangle(40, 27.0, 40.5, 27.5);
+
     private final static Precision precision = Precision.DOUBLE;
 
     private final List<Entry<Object, Point>> entries = GreekEarthquakes.entriesList(precision);
@@ -166,7 +170,7 @@ public class BenchmarksRTree {
         return insertPoint(starTreeM128);
     }
 
-     @Benchmark
+    @Benchmark
     public long rStarTreeSearchOfGreekDataPointsMaxChildren128() {
         return searchGreek(starTreeM128);
     }
@@ -201,12 +205,12 @@ public class BenchmarksRTree {
         return insertRectangle(smallStarTreeM10);
     }
 
-     @Benchmark
+    @Benchmark
     public void rStarTreeSearchOf1000PointsMaxChildren004() {
         search(smallStarTreeM4);
     }
 
-     @Benchmark
+    @Benchmark
     public long rStarTreeSearchOf1000PointsMaxChildren010() {
         return search(smallStarTreeM10);
     }
@@ -226,7 +230,7 @@ public class BenchmarksRTree {
         return insertRectangle(smallStarTreeM32);
     }
 
-     @Benchmark
+    @Benchmark
     public long rStarTreeSearchOf1000PointsMaxChildren032() {
         return search(smallStarTreeM32);
     }
@@ -246,7 +250,7 @@ public class BenchmarksRTree {
         return insertRectangle(smallStarTreeM128);
     }
 
-     @Benchmark
+    @Benchmark
     public long rStarTreeSearchOf1000PointsMaxChildren128() {
         return search(smallStarTreeM128);
     }
@@ -256,7 +260,7 @@ public class BenchmarksRTree {
         deleteAll(starTreeM10);
     }
 
-     @Benchmark
+    @Benchmark
     public long searchNearestGreek() {
         return searchNearestGreek(starTreeM4);
     }
@@ -266,32 +270,22 @@ public class BenchmarksRTree {
     }
 
     private long search(RTree<Object, Rectangle> tree) {
-        return search(tree, Geometries.rectangle(500, 500, 630, 630));
+        return search(tree, DEFAULT_1000_RECTANGLE);
     }
 
     private long search(RTree<?, ?> tree, Rectangle r) {
-        return count(tree.search(r));
-    }
-
-    private static long count(Iterable<?> iterable) {
-        long count = 0;
-        Iterator<?> it = iterable.iterator();
-        while (it.hasNext()) {
-            it.next();
-            count++;
-        }
-        return count;
+        return Iterables.size(tree.search(r));
     }
 
     private long searchGreek(RTree<Object, Point> tree) {
         // should return 22 results
-        return search(tree, Geometries.rectangle(40, 27.0, 40.5, 27.5));
+        return search(tree, DEFAULT_GREEK_RECTANGLE);
     }
 
     private static Rectangle searchRectangle() {
         final Rectangle r;
         if (precision == Precision.DOUBLE) {
-            r = Geometries.rectangle(40, 27.0, 40.5, 27.5);
+            r = DEFAULT_GREEK_RECTANGLE;
         } else {
             r = Geometries.rectangle(40f, 27.0f, 40.5f, 27.5f);
         }
@@ -305,7 +299,7 @@ public class BenchmarksRTree {
         } else {
             p = Geometries.point(40.0f, 27.0f);
         }
-        return count(tree.nearest(p, 1, 300));
+        return Iterables.size(tree.nearest(p, 1, 300));
     }
 
     private long searchGreekWithBackpressure(RTree<Object, Point> tree, final Blackhole bh) {
@@ -330,7 +324,9 @@ public class BenchmarksRTree {
         Rectangle r = searchRectangle();
         if (true) {
             while (true) {
-                assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
+                if (Iterables.size(b.defaultTreeM10.search(r)) == 0) {
+                    System.out.println("unexpected");
+                }
             }
         } else {
             long t = System.currentTimeMillis();
