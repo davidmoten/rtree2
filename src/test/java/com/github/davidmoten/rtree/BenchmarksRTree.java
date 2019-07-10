@@ -119,12 +119,12 @@ public class BenchmarksRTree {
         return insertPoint(starTreeM10);
     }
 
-    // @Benchmark
+     @Benchmark
     public long rStarTreeSearchOfGreekDataPointsMaxChildren004() {
         return searchGreek(starTreeM4);
     }
 
-    // @Benchmark
+     @Benchmark
     public long rStarTreeSearchOfGreekDataPointsMaxChildren010() {
         return searchGreek(starTreeM10);
     }
@@ -149,7 +149,7 @@ public class BenchmarksRTree {
         return insertPoint(starTreeM32);
     }
 
-    // @Benchmark
+     @Benchmark
     public long rStarTreeSearchOfGreekDataPointsMaxChildren032() {
         return searchGreek(starTreeM32);
     }
