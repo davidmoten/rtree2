@@ -1,5 +1,7 @@
 package com.github.davidmoten.rtree;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -27,14 +29,8 @@ public class HighPrecisionTest {
         double x1 = 2.0000000001;
         System.out.println((float) x1);
         tree = tree.add(2, Geometries.rectangle(x1, 2, 3, 3));
-        tree.search(Geometries.rectangle((float) x1, 2.0, (float) x1, 2.0)) //
-                .test() //
-                .assertNoValues() //
-                .assertCompleted();
-        tree.search(Geometries.rectangle(x1, 2.0, x1, 2.0)) //
-                .test() //
-                .assertValueCount(1) //
-                .assertCompleted();
+        assertEquals(0, Iterables.size(tree.search(Geometries.rectangle((float) x1, 2.0, (float) x1, 2.0))));
+        assertEquals(1, Iterables.size(tree.search(Geometries.rectangle(x1, 2.0, x1, 2.0))));
     }
 
     private static final MathContext FLOOR = new MathContext(7, RoundingMode.FLOOR);

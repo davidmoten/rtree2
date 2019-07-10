@@ -1,12 +1,12 @@
 package com.github.davidmoten.rtree.internal;
 
-import static com.github.davidmoten.guavamini.Optional.of;
+import static java.util.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Node;
@@ -14,29 +14,10 @@ import com.github.davidmoten.rtree.NonLeaf;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
 
-import rx.Subscriber;
-import rx.functions.Func1;
-
 public final class NonLeafHelper {
 
     private NonLeafHelper() {
         // prevent instantiation
-    }
-
-    public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> criterion,
-            Subscriber<? super Entry<T, S>> subscriber, NonLeaf<T, S> node) {
-        if (!criterion.call(node.geometry().mbr()))
-            return;
-
-        int numChildren = node.count();
-        for (int i = 0; i < numChildren; i++) {
-            if (subscriber.isUnsubscribed()) {
-                return;
-            } else {
-                Node<T, S> child = node.child(i);
-                child.searchWithoutBackpressure(criterion, subscriber);
-            }
-        }
     }
 
     public static <T, S extends Geometry> List<Node<T, S>> add(
@@ -111,7 +92,7 @@ public final class NonLeafHelper {
             List<Node<T, S>> nodes = Util.remove(children, removeTheseNodes);
             nodes.addAll(addTheseNodes);
             if (nodes.size() == 0)
-                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), addTheseEntries,
+                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> empty(), addTheseEntries,
                         countDeleted);
             else {
                 NonLeaf<T, S> nd = node.context().factory().createNonLeaf(nodes, node.context());

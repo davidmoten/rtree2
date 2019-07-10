@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import com.github.davidmoten.junit.Asserts;
 
-public class SerializerHelperTest {
+public class IterablesTest {
     
     @Test
     public void assertIsUtilityClass() {
-        Asserts.assertIsUtilityClass(SerializerHelper.class);
+        Asserts.assertIsUtilityClass(Iterables.class);
     }
 
 }

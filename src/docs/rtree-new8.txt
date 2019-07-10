@@ -1,0 +1,5 @@
+Benchmark                                                        Mode  Cnt       Score      Error  Units
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren004  thrpt   10  232599.024 ± 8108.579  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren010  thrpt   10  245371.174 ± 5214.976  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren032  thrpt   10  335596.036 ± 3672.190  ops/s
+BenchmarksRTree.rStarTreeSearchOfGreekDataPointsMaxChildren128  thrpt   10  220002.633 ± 8639.077  ops/s

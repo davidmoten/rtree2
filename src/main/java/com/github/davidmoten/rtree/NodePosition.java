@@ -3,10 +3,11 @@ package com.github.davidmoten.rtree;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
 
+//Mutable, not thread-safe
 final class NodePosition<T, S extends Geometry> {
 
-    private final Node<T, S> node;
-    private final int position;
+    private Node<T, S> node;
+    private int position;
 
     NodePosition(Node<T, S> node, int position) {
         Preconditions.checkNotNull(node);
@@ -21,9 +22,13 @@ final class NodePosition<T, S extends Geometry> {
     int position() {
         return position;
     }
-
-    NodePosition<T, S> nextPosition() {
-        return new NodePosition<T, S>(node, position + 1);
+    
+    boolean hasRemaining() {
+        return position != node.count();
+    }
+    
+    void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

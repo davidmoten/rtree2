@@ -35,33 +35,27 @@ public class LatLongExampleTest {
 
         // Now search for all locations within 300km of Canberra
         final double distanceKm = 300;
-        List<Entry<String, Point>> list = search(tree, canberra, distanceKm)
-                // get the result
-                .toList().toBlocking().single();
+        List<Entry<String, Point>> list = Iterables.toList(search(tree, canberra, distanceKm));
 
         // should have returned Sydney only
         assertEquals(1, list.size());
         assertEquals("Sydney", list.get(0).value());
     }
 
-    public static <T> Observable<Entry<T, Point>> search(RTree<T, Point> tree, Point lonLat,
-            final double distanceKm) {
+    public static <T> Iterable<Entry<T, Point>> search(RTree<T, Point> tree, Point lonLat, final double distanceKm) {
         // First we need to calculate an enclosing lat long rectangle for this
         // distance then we refine on the exact distance
         final Position from = Position.create(lonLat.y(), lonLat.x());
         Rectangle bounds = createBounds(from, distanceKm);
 
-        return tree
+        return Iterables.filter(tree
                 // do the first search using the bounds
-                .search(bounds)
+                .search(bounds),
                 // refine using the exact distance
-                .filter(new Func1<Entry<T, Point>, Boolean>() {
-                    @Override
-                    public Boolean call(Entry<T, Point> entry) {
-                        Point p = entry.geometry();
-                        Position position = Position.create(p.y(), p.x());
-                        return from.getDistanceToKm(position) < distanceKm;
-                    }
+                entry -> {
+                    Point p = entry.geometry();
+                    Position position = Position.create(p.y(), p.x());
+                    return from.getDistanceToKm(position) < distanceKm;
                 });
     }
 
@@ -82,7 +76,7 @@ public class LatLongExampleTest {
         // now find the circles that contain bungendore (which is 30km from
         // Canberra)
         final Point location = bungendore;
-        String result = tree.search(location)
+        String result = Observable.from(tree.search(location))
                 // filter on the exact distance from the centre of the GeoCircle
                 .filter(new Func1<Entry<GeoCircleValue<String>, Rectangle>, Boolean>() {
                     Position from = Position.create(location.y(), location.x());
@@ -112,13 +106,12 @@ public class LatLongExampleTest {
         return Geometries.rectangle(west.getLon(), south.getLat(), east.getLon(), north.getLat());
     }
 
-    private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm,
-            T value) {
+    private static <T> GeoCircleValue<T> createGeoCircleValue(Point point, double radiusKm, T value) {
         return new GeoCircleValue<T>((float) point.y(), (float) point.x(), radiusKm, value);
     }
 
-    private static <T> RTree<GeoCircleValue<T>, Rectangle> add(
-            RTree<GeoCircleValue<T>, Rectangle> tree, GeoCircleValue<T> c) {
+    private static <T> RTree<GeoCircleValue<T>, Rectangle> add(RTree<GeoCircleValue<T>, Rectangle> tree,
+            GeoCircleValue<T> c) {
         return tree.add(c, createBounds(Position.create(c.lat, c.lon), c.radiusKm));
     }
 

@@ -1,7 +1,6 @@
 package com.github.davidmoten.rtree.geometry.internal;
 
 import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.Rectangle;
@@ -20,7 +19,7 @@ public final class RectangleDouble implements Rectangle {
     }
 
     public static RectangleDouble create(double x1, double y1, double x2, double y2) {
-        return new RectangleDouble((double) x1, (double) y1, (double) x2, (double) y2);
+        return new RectangleDouble(x1, y1, x2, y2);
     }
 
     @Override
@@ -56,16 +55,7 @@ public final class RectangleDouble implements Rectangle {
 
     @Override
     public boolean intersects(Rectangle r) {
-        if (r instanceof RectangleDouble) {
-            RectangleDouble rd = (RectangleDouble) r;
-            return intersects(rd);
-        } else {
-            return GeometryUtil.intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
-        }
-    }
-
-    private boolean intersects(RectangleDouble rd) {
-        return GeometryUtil.intersects(x1, y1, x2, y2, rd.x1, rd.y1, rd.x2, rd.y2);
+        return GeometryUtil.intersects(x1, y1, x2, y2, r.x1(), r.y1(), r.x2(), r.y2());
     }
 
     @Override
@@ -90,10 +80,10 @@ public final class RectangleDouble implements Rectangle {
 
     @Override
     public boolean equals(Object obj) {
-        Optional<RectangleDouble> other = ObjectsHelper.asClass(obj, RectangleDouble.class);
-        if (other.isPresent()) {
-            return Objects.equal(x1, other.get().x1) && Objects.equal(x2, other.get().x2)
-                    && Objects.equal(y1, other.get().y1) && Objects.equal(y2, other.get().y2);
+        RectangleDouble other = ObjectsHelper.asClass(obj, RectangleDouble.class);
+        if (other != null) {
+            return Objects.equal(x1, other.x1) && Objects.equal(x2, other.x2)
+                    && Objects.equal(y1, other.y1) && Objects.equal(y2, other.y2);
         } else
             return false;
     }

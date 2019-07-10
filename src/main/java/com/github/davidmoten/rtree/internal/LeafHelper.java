@@ -1,21 +1,18 @@
 package com.github.davidmoten.rtree.internal;
 
-import static com.github.davidmoten.guavamini.Optional.of;
+import static java.util.Optional.of;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.rtree.Context;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.Leaf;
 import com.github.davidmoten.rtree.Node;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.github.davidmoten.rtree.geometry.ListPair;
-
-import rx.Subscriber;
-import rx.functions.Func1;
 
 public final class LeafHelper {
 
@@ -41,7 +38,7 @@ public final class LeafHelper {
                 return new NodeAndEntries<T, S>(of(node), Collections.<Entry<T, S>> emptyList(),
                         numDeleted);
             } else {
-                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> absent(), entries2,
+                return new NodeAndEntries<T, S>(Optional.<Node<T, S>> empty(), entries2,
                         numDeleted);
             }
         }
@@ -68,24 +65,6 @@ public final class LeafHelper {
         list.add(context.factory().createLeaf(pair.group1().list(), context));
         list.add(context.factory().createLeaf(pair.group2().list(), context));
         return list;
-    }
-
-    public static <T, S extends Geometry> void search(Func1<? super Geometry, Boolean> condition,
-            Subscriber<? super Entry<T, S>> subscriber, Leaf<T, S> leaf) {
-
-        if (!condition.call(leaf.geometry().mbr())) {
-            return;
-        }
-
-        for (int i = 0; i < leaf.count(); i++) {
-            Entry<T, S> entry = leaf.entry(i);
-            if (subscriber.isUnsubscribed()) {
-                return;
-            } else {
-                if (condition.call(entry.geometry()))
-                    subscriber.onNext(entry);
-            }
-        }
     }
 
 }

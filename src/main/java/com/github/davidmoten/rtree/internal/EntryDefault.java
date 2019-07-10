@@ -1,7 +1,6 @@
 package com.github.davidmoten.rtree.internal;
 
 import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.guavamini.Optional;
 import com.github.davidmoten.guavamini.Preconditions;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -79,10 +78,10 @@ public final class EntryDefault<T, S extends Geometry> implements Entry<T, S> {
     @Override
     public boolean equals(Object obj) {
         @SuppressWarnings("rawtypes")
-        Optional<EntryDefault> other = ObjectsHelper.asClass(obj, EntryDefault.class);
-        if (other.isPresent()) {
-            return Objects.equal(value, other.get().value)
-                    && Objects.equal(geometry, other.get().geometry);
+        EntryDefault other = ObjectsHelper.asClass(obj, EntryDefault.class);
+        if (other != null) {
+            return Objects.equal(value, other.value)
+                    && Objects.equal(geometry, other.geometry);
         } else
             return false;
     }
