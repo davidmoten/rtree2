@@ -63,11 +63,8 @@ final class Search {
         }
 
         private void load() {
-            if (next == null && stack != null) {
+            if (next == null) {
                 next = search(condition, stack);
-                if (stack.isEmpty()) {
-                    return;
-                }
             }
         }
     }
