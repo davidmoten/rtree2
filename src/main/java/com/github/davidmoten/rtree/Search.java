@@ -93,8 +93,9 @@ final class Search {
     private static <T, S extends Geometry> Entry<T, S> searchLeaf(final Predicate<? super Geometry> condition,
             NodePosition<T, S> np) {
         int i = np.position();
+        Leaf<T, S> leaf = ((Leaf<T, S>) np.node());
         do {
-            Entry<T, S> entry = ((Leaf<T, S>) np.node()).entry(i);
+            Entry<T, S> entry = leaf.entry(i);
             if (condition.test(entry.geometry())) {
                 np.setPosition(i + 1);
                 return entry;
