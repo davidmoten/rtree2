@@ -98,7 +98,7 @@ final class Search {
                     return entry;
                 }
                 i++;
-            } while (i < np.node().count());
+            } while (i < leaf.count());
             np.setPosition(i);
             return null;
         }
