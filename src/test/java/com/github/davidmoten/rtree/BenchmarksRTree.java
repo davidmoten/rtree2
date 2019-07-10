@@ -321,20 +321,23 @@ public class BenchmarksRTree {
     public static void main(String[] args) {
         BenchmarksRTree b = new BenchmarksRTree();
         Rectangle r = searchRectangle();
-        if (true) {
+        if (false) {
             while (true) {
                 if (Iterables.size(b.defaultTreeM10.search(r)) == 0) {
                     System.out.println("unexpected");
                 }
             }
         } else {
+            RTree<Object, Point> tree = RTree.maxChildren(28).star().<Object, Point>create(entries);
             long t = System.currentTimeMillis();
             long warmupTimeSeconds = 10;
             long benchmarkTimeSeconds = 10;
             long t2 = -1;
             long count = 0;
             while (true) {
-                assert Iterables.size(b.defaultTreeM10.search(r)) > 0;
+                if (Iterables.size(tree.search(r))== 0) {
+                    System.out.println("zero!!");
+                };
                 count++;
                 if (count % 10000 == 0) {
                     if (t2 == -1) {
