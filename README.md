@@ -17,9 +17,7 @@ The algorithm to achieve immutability is cute. For insertion/deletion it involve
 required leaf node then recursion back up to replace the parent nodes up to the root. The guts of 
 it is in [Leaf.java](src/main/java/com/github/davidmoten/rtree2/internal/LeafDefault.java) and [NonLeaf.java](src/main/java/com/github/davidmoten/rtree2/internal/NonLeafDefault.java).
 
-[Backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure) support required some complexity because effectively a
-bookmark needed to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing
- the node and child index of the path nodes came to the rescue here and recursion was abandoned in favour of looping to prevent stack overflow (unfortunately java doesn't support tail recursion!).
+Iterator support requires a bookmark to be kept for a position in the tree and returned to later to continue traversal. An immutable stack containing the node and child index of the path nodes came to the rescue here and recursion was abandoned in favour of looping to prevent stack overflow (unfortunately java doesn't support tail recursion!).
 
 Maven site reports are [here](http://davidmoten.github.io/rtree2/index.html) including [javadoc](http://davidmoten.github.io/rtree2/apidocs/index.html).
 
@@ -29,19 +27,15 @@ Features
 * Guttman's heuristics (Quadratic splitter) ([paper](https://www.google.com.au/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CB8QFjAA&url=http%3A%2F%2Fpostgis.org%2Fsupport%2Frtree.pdf&ei=ieEQVJuKGdK8uATpgoKQCg&usg=AFQjCNED9w2KjgiAa9UI-UO_0eWjcADTng&sig2=rZ_dzKHBHY62BlkBuw3oCw&bvm=bv.74894050,d.c2E))
 * R*-tree heuristics ([paper](http://dbs.mathematik.uni-marburg.de/publications/myPapers/1990/BKSS90.pdf))
 * Customizable [splitter](src/main/java/com/github/davidmoten/rtree2/Splitter.java) and [selector](src/main/java/com/github/davidmoten/rtree2/Selector.java)
-* search returns [```Observable```](http://reactivex.io/RxJava/javadoc/rx/Observable.html) 
-* search is cancelled by unsubscription
 * search is ```O(log(n))``` on average
 * insert, delete are ```O(n)``` worst case
 * balanced delete
 * uses structural sharing
-* supports [backpressure](https://github.com/ReactiveX/RxJava/wiki/Backpressure)
 * JMH benchmarks
 * visualizer included
-* serialization using [FlatBuffers](http://github.com/google/flatbuffers)
-* high unit test [code coverage](http://davidmoten.github.io/rtree2/cobertura/index.html) 
+* decent unit test [code coverage](http://davidmoten.github.io/rtree2/cobertura/index.html) 
 * R*-tree performs 900,000 searches/second returning 22 entries from a tree of 38,377 Greek earthquake locations on i7-920@2.67Ghz (maxChildren=4, minChildren=1). Insert at 240,000 entries per second.
-* requires java 1.6 or later
+* requires java 1.8 or later
 
 Number of points = 1000, max children per node 8: 
 
