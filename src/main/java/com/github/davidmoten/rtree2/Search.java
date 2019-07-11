@@ -94,7 +94,7 @@ final class Search {
 
         private Entry<T, S> searchLeaf(NodePosition<T, S> np) {
             int i = np.position();
-            Leaf<T, S> leaf = ((Leaf<T, S>) np.node());
+            Leaf<T, S> leaf = (Leaf<T, S>) np.node();
             do {
                 Entry<T, S> entry = leaf.entry(i);
                 if (condition.test(entry.geometry())) {

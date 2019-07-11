@@ -863,7 +863,7 @@ public final class RTree<T, S extends Geometry> {
      */
     public Optional<Rectangle> mbr() {
         if (!root.isPresent())
-            return Optional.empty();
+            return empty();
         else
             return of(root.get().geometry().mbr());
     }
