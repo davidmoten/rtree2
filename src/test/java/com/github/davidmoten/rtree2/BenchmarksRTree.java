@@ -11,9 +11,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
-import com.github.davidmoten.rtree2.Entry;
-import com.github.davidmoten.rtree2.Iterables;
-import com.github.davidmoten.rtree2.RTree;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Point;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
@@ -321,17 +318,19 @@ public class BenchmarksRTree {
         }
     }
 
+    static boolean longRun = true;
+    
     public static void main(String[] args) {
-        BenchmarksRTree b = new BenchmarksRTree();
+        RTree<Object, Point> tree = RTree.maxChildren(28).star().<Object, Point>create(entries);
         Rectangle r = searchRectangle();
-        if (true) {
+        if (longRun) {
             while (true) {
-                if (Iterables.size(b.starTreeM10.search(r)) == 0) {
+                if (Iterables.size(tree.search(r)) == 0) {
                     System.out.println("unexpected");
                 }
             }
         } else {
-            RTree<Object, Point> tree = RTree.maxChildren(28).star().<Object, Point>create(entries);
+            
             long t = System.currentTimeMillis();
             long warmupTimeSeconds = 10;
             long benchmarkTimeSeconds = 10;

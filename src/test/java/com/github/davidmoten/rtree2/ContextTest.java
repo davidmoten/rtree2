@@ -2,10 +2,6 @@ package com.github.davidmoten.rtree2;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.Context;
-import com.github.davidmoten.rtree2.Factories;
-import com.github.davidmoten.rtree2.SelectorMinimalAreaIncrease;
-import com.github.davidmoten.rtree2.SplitterQuadratic;
 import com.github.davidmoten.rtree2.geometry.Geometry;
 
 public class ContextTest {

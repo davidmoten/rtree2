@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree2.SplitterQuadratic;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.HasGeometry;
 import com.github.davidmoten.rtree2.geometry.ListPair;

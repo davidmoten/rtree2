@@ -9,9 +9,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 
 import com.github.davidmoten.junit.Asserts;
-import com.github.davidmoten.rtree2.ImageSaver;
-import com.github.davidmoten.rtree2.RTree;
-import com.github.davidmoten.rtree2.Visualizer;
 
 public class ImageSaverTest {
 

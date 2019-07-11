@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.Node;
 import com.github.davidmoten.rtree2.geometry.Geometry;
 import com.github.davidmoten.rtree2.internal.NonLeafDefault;
 

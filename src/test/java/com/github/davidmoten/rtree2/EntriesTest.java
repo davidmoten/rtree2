@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 import com.github.davidmoten.junit.Asserts;
-import com.github.davidmoten.rtree2.Entries;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 
 public class EntriesTest {

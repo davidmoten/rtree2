@@ -9,12 +9,6 @@ import java.awt.geom.Line2D;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.geometry.Circle;
-import com.github.davidmoten.rtree2.geometry.Geometries;
-import com.github.davidmoten.rtree2.geometry.Intersects;
-import com.github.davidmoten.rtree2.geometry.Line;
-import com.github.davidmoten.rtree2.geometry.Rectangle;
-
 public final class LineTest {
 
     private static final double PRECISION = 0.00001;

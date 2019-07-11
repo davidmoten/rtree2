@@ -7,9 +7,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.davidmoten.grumpy.core.Position;
-import com.github.davidmoten.rtree2.Entry;
-import com.github.davidmoten.rtree2.Iterables;
-import com.github.davidmoten.rtree2.RTree;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Point;
 import com.github.davidmoten.rtree2.geometry.Rectangle;

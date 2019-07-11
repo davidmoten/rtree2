@@ -6,10 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.geometry.Geometries;
-import com.github.davidmoten.rtree2.geometry.Point;
-import com.github.davidmoten.rtree2.geometry.Rectangle;
-
 public class PointTest {
 
 	private static final double PRECISION = 0.000001;

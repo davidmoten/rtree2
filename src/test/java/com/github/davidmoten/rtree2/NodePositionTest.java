@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.github.davidmoten.rtree2.Node;
-import com.github.davidmoten.rtree2.NodePosition;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
 
 public class NodePositionTest {

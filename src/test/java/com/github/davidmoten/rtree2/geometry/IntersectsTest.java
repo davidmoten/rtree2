@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.github.davidmoten.junit.Asserts;
-import com.github.davidmoten.rtree2.geometry.Intersects;
 
 public class IntersectsTest {
 

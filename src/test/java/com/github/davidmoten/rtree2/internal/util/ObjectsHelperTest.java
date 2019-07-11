@@ -5,8 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.internal.util.ObjectsHelper;
-
 public class ObjectsHelperTest {
 
     @Test

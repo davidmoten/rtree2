@@ -7,12 +7,6 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.Context;
-import com.github.davidmoten.rtree2.Entries;
-import com.github.davidmoten.rtree2.Entry;
-import com.github.davidmoten.rtree2.Factories;
-import com.github.davidmoten.rtree2.SelectorMinimalAreaIncrease;
-import com.github.davidmoten.rtree2.SplitterQuadratic;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
 import com.github.davidmoten.rtree2.internal.LeafDefault;

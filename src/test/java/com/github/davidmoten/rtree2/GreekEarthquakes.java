@@ -8,8 +8,6 @@ import java.util.zip.GZIPInputStream;
 
 import org.davidmoten.kool.Stream;
 
-import com.github.davidmoten.rtree2.Entries;
-import com.github.davidmoten.rtree2.Entry;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Point;
 

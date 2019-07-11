@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.davidmoten.kool.Stream;
 
-import com.github.davidmoten.rtree2.Entry;
-import com.github.davidmoten.rtree2.RTree;
 import com.github.davidmoten.rtree2.geometry.Point;
 
 public class GalleryMain {

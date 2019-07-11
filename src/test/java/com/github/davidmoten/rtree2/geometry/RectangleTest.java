@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.github.davidmoten.rtree2.geometry.Rectangle;
-
 public class RectangleTest {
 
     private static final double PRECISION = 0.00001;

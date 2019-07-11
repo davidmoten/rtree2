@@ -32,13 +32,6 @@ import org.junit.runners.MethodSorters;
 
 import com.github.davidmoten.guavamini.Lists;
 import com.github.davidmoten.guavamini.Sets;
-import com.github.davidmoten.rtree2.Entries;
-import com.github.davidmoten.rtree2.Entry;
-import com.github.davidmoten.rtree2.Iterables;
-import com.github.davidmoten.rtree2.RTree;
-import com.github.davidmoten.rtree2.SelectorMinimalAreaIncrease;
-import com.github.davidmoten.rtree2.SplitterQuadratic;
-import com.github.davidmoten.rtree2.SplitterRStar;
 import com.github.davidmoten.rtree2.geometry.Circle;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Geometry;
