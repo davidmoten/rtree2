@@ -9,6 +9,10 @@ import java.util.function.Predicate;
 import com.github.davidmoten.rtree2.geometry.Geometry;
 
 final class Search {
+    
+    private Search() {
+        // prevent instantiation
+    }
 
     static <T, S extends Geometry> Iterable<Entry<T, S>> search(Node<T, S> node,
             Predicate<? super Geometry> condition) {

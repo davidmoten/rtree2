@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -59,6 +60,12 @@ public class RTreeTest {
     public void testSearchEmptyTree() {
         RTree<Object, Geometry> tree = RTree.create();
         assertTrue(Observable.from(tree.search(r(1))).isEmpty().toBlocking().single());
+    }
+    
+    @Test(expected = NoSuchElementException.class)
+    public void testSearchEmptyTreeIteratorNextThrows() {
+        RTree<Object, Geometry> tree = RTree.create();
+        tree.search(r(1)).iterator().next();
     }
 
     @Test
