@@ -1,6 +1,7 @@
 package com.github.davidmoten.rtree2.internal.util;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
