@@ -18,14 +18,14 @@
     <description>Java implementation of an immutable in-memory R-Tree for spatial indexing</description>
     <packaging>jar</packaging>
 
-    <url>http://github.com/davidmoten/rtree</url>
+    <url>http://github.com/davidmoten/rtree2</url>
 
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <scm.url>scm:git:https://github.com/davidmoten/rtree.git</scm.url>
+        <scm.url>scm:git:https://github.com/davidmoten/rtree2.git</scm.url>
         <slf4j.version>1.7.12</slf4j.version>
 
         <compiler.version>3.8.1</compiler.version>
@@ -55,12 +55,12 @@
 
     <ciManagement>
         <system>Travis</system>
-        <url>https://travis-ci.org/davidmoten/rtree</url>
+        <url>https://travis-ci.org/davidmoten/rtree2</url>
     </ciManagement>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/davidmoten/rtree/issues</url>
+        <url>https://github.com/davidmoten/rtree2/issues</url>
     </issueManagement>
 
     <inceptionYear>2013</inceptionYear>
@@ -216,7 +216,7 @@
                                 </goals>
                                 <configuration>
                                     <classpathScope>test</classpathScope>
-                                    <mainClass>com.github.davidmoten.rtree.BenchmarksRTree</mainClass>
+                                    <mainClass>com.github.davidmoten.rtree2.BenchmarksRTree</mainClass>
                                 </configuration>
                             </execution>
                         </executions>
@@ -242,7 +242,7 @@
                         </executions>
                         <configuration>
                             <classpathScope>test</classpathScope>
-                            <mainClass>com.github.davidmoten.rtree.GalleryMain</mainClass>
+                            <mainClass>com.github.davidmoten.rtree2.GalleryMain</mainClass>
                         </configuration>
                     </plugin>
                 </plugins>
