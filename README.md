@@ -5,7 +5,7 @@ rtree2
 [![codecov](https://codecov.io/gh/davidmoten/rtree2/branch/master/graph/badge.svg)](https://codecov.io/gh/davidmoten/rtree2)
 
 
-In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation in java using [RxJava Observables](https://github.com/ReactiveX/RxJava) for reactive processing of search results. 
+In-memory immutable 2D [R-tree](http://en.wikipedia.org/wiki/R-tree) implementation. This is the next version of [rtree](https://github.com/davidmoten/rtree) and differs in that it does not have a reactive API (returns `Iterable` from searches) and does not support serialization directly. If you want a reactive API then wrap then all the major reactive libraries can wrap `Iterable`s. 
 
 Status: *released to Maven Central*
 
