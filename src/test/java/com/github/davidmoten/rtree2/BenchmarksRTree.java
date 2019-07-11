@@ -318,7 +318,7 @@ public class BenchmarksRTree {
         }
     }
 
-    static boolean longRun = true;
+    static boolean longRun = false;
     
     public static void main(String[] args) {
         RTree<Object, Point> tree = RTree.maxChildren(28).star().<Object, Point>create(entries);

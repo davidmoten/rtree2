@@ -1,15 +1,15 @@
 package com.github.davidmoten.rtree2;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 import com.github.davidmoten.rtree2.geometry.Geometry;
 
 final class Search {
-    
+
     private Search() {
         // prevent instantiation
     }
@@ -44,7 +44,7 @@ final class Search {
 
         SearchIterator(Node<T, S> node, Predicate<? super Geometry> condition) {
             this.condition = condition;
-            this.stack = new ArrayDeque<NodePosition<T, S>>(8);
+            this.stack = new LinkedList<NodePosition<T, S>>();
             stack.push(new NodePosition<T, S>(node, 0));
         }
 
