@@ -91,8 +91,7 @@ public final class SplitterRStar implements Splitter {
         List<ListPair<T>> pairs = new ArrayList<ListPair<T>>(list.size() - 2 * minSize + 1);
         for (int i = minSize; i < list.size() - minSize + 1; i++) {
             // Note that subList returns a view of list so creating list1 and
-            // list2 doesn't
-            // necessarily incur array allocation costs.
+            // list2 doesn't necessarily incur array allocation costs.
             List<T> list1 = list.subList(0, i);
             List<T> list2 = list.subList(i, list.size());
             ListPair<T> pair = new ListPair<T>(list1, list2);
