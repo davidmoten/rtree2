@@ -111,6 +111,23 @@ public final class Intersects {
         }
     };
 
+    public static final BiPredicate<Geometry, Polygon> geometryIntersectsPolygon = new BiPredicate<Geometry, Polygon>() {
+
+        @Override
+        public boolean test(Geometry geometry, Polygon polygon) {
+            if (geometry instanceof Line)
+                return polygon.intersects((Line) geometry);
+            else if (geometry instanceof Circle)
+                return polygon.intersects((Circle) geometry);
+            else if (geometry instanceof Point)
+                return polygon.intersects((Point) geometry);
+            else if (geometry instanceof Rectangle)
+                return polygon.intersects((Rectangle) geometry);
+            else
+                throw new RuntimeException("unrecognized geometry: " + geometry);
+        }
+    };
+
     public static final BiPredicate<Geometry, Circle> geometryIntersectsCircle = new BiPredicate<Geometry, Circle>() {
 
         @Override

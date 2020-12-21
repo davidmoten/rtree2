@@ -7,6 +7,7 @@ import com.github.davidmoten.rtree2.geometry.internal.LineDouble;
 import com.github.davidmoten.rtree2.geometry.internal.LineFloat;
 import com.github.davidmoten.rtree2.geometry.internal.PointDouble;
 import com.github.davidmoten.rtree2.geometry.internal.PointFloat;
+import com.github.davidmoten.rtree2.geometry.internal.PolygonDouble;
 import com.github.davidmoten.rtree2.geometry.internal.RectangleDouble;
 import com.github.davidmoten.rtree2.geometry.internal.RectangleFloat;
 
@@ -56,6 +57,10 @@ public final class Geometries {
 
     private static Rectangle rectangleDouble(double x1, double y1, double x2, double y2) {
         return  RectangleDouble.create(x1, y1, x2, y2);
+    }
+
+    public static Polygon polygon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+        return PolygonDouble.create(x1, y1, x2, y2, x3, y3, x4, y4);
     }
 
     public static Circle circle(double x, double y, double radius) {
