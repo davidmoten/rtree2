@@ -1,6 +1,6 @@
 rtree2
 =========
-[![Travis CI](https://travis-ci.org/davidmoten/rtree2.svg)](https://travis-ci.org/davidmoten/rtree2)<br/>
+<a href="https://github.com/davidmoten/kool/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/kool/actions/workflows/ci.yml/badge.svg"/></a><br/>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree2/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree2)<br/>
 [![codecov](https://codecov.io/gh/davidmoten/rtree2/branch/master/graph/badge.svg)](https://codecov.io/gh/davidmoten/rtree2)
 
