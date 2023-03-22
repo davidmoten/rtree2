@@ -1,8 +1,6 @@
 package com.github.davidmoten.rtree2.geometry.internal;
 
-import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.rtree2.geometry.*;
-import com.github.davidmoten.rtree2.geometry.internal.PointDouble;
 import com.github.davidmoten.rtree2.internal.util.ObjectsHelper;
 
 import java.util.ArrayList;
@@ -85,7 +83,7 @@ public final class PolygonDouble implements Polygon {
 
     @Override
     public boolean intersects(Line line) {
-        if (intersects(Geometries.point(line.x1(), line.y1())))
+        if (intersects(PointDouble.create(line.x1(), line.y1())))
             return true;
         int n = points.size();
         for (int i = 0; i < n; i++) {
