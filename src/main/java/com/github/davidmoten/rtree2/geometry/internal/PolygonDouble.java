@@ -21,7 +21,8 @@ public final class PolygonDouble implements Polygon {
         double maxX = coordinates[0];
         double minY = coordinates[1];
         double maxY = coordinates[1];
-        for (int i = 0; i < coordinates.length - 1; i += 2) {
+        points.add(PointDouble.create(coordinates[0], coordinates[1]));
+        for (int i = 2; i < coordinates.length - 1; i += 2) {
             minX = Math.min(minX, coordinates[i]);
             maxX = Math.max(maxX, coordinates[i]);
             minY = Math.min(minY, coordinates[i + 1]);
