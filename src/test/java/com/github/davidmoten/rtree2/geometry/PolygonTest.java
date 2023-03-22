@@ -31,6 +31,13 @@ public final class PolygonTest {
     }
 
     @Test
+    public void testDoesIntersectContainedLine() {
+        Polygon a = Geometries.polygon(-1, -1, -1, 1, 1, 1, 1, -1);
+        Line b = Geometries.line(-0.2, 0.5, 0.2, -0.5);
+        assertTrue(a.intersects(b));
+    }
+
+    @Test
     public void testDoesNotIntersectHorizontalLine() {
         Polygon a = Geometries.polygon(-1, -1, -1, 1, 1, 1, 1, -1);
         Line b = Geometries.line(-0.5, 5, 0.5, 5);

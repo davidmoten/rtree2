@@ -1,11 +1,7 @@
 package com.github.davidmoten.rtree2.geometry.internal;
 
 import com.github.davidmoten.guavamini.Objects;
-import com.github.davidmoten.rtree2.geometry.Circle;
-import com.github.davidmoten.rtree2.geometry.Line;
-import com.github.davidmoten.rtree2.geometry.Point;
-import com.github.davidmoten.rtree2.geometry.Polygon;
-import com.github.davidmoten.rtree2.geometry.Rectangle;
+import com.github.davidmoten.rtree2.geometry.*;
 import com.github.davidmoten.rtree2.geometry.internal.PointDouble;
 import com.github.davidmoten.rtree2.internal.util.ObjectsHelper;
 
@@ -19,7 +15,7 @@ public final class PolygonDouble implements Polygon {
     private static final double PRECISION = 0.00000001;
 
     private PolygonDouble(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        points = new ArrayList<PointDouble>();
+        points = new ArrayList<>();
         points.add(PointDouble.create(x1, y1));
         points.add(PointDouble.create(x2, y2));
         points.add(PointDouble.create(x3, y3));
@@ -89,6 +85,8 @@ public final class PolygonDouble implements Polygon {
 
     @Override
     public boolean intersects(Line line) {
+        if (intersects(Geometries.point(line.x1(), line.y1())))
+            return true;
         int n = points.size();
         for (int i = 0; i < n; i++) {
             PointDouble cur = points.get(i);
