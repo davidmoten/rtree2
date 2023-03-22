@@ -288,6 +288,18 @@ cd rtree2
 mvn clean install
 ```
 
+Build a jar
+------------
+```
+mvn clean compile assembly:single
+```
+
+Run tests
+------------
+```
+mvn test
+```
+
 How to run benchmarks
 --------------------------
 Benchmarks are provided by 
