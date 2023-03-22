@@ -12,20 +12,27 @@ public final class PolygonDouble implements Polygon {
 
     private static final double PRECISION = 0.00000001;
 
-    private PolygonDouble(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+    private PolygonDouble(double[] coordinates) {
+        if (coordinates.length % 2 != 0 || coordinates.length < 6)
+            throw new IllegalArgumentException("expecting an even number of coordinate points of at least 6");
+
         points = new ArrayList<>();
-        points.add(PointDouble.create(x1, y1));
-        points.add(PointDouble.create(x2, y2));
-        points.add(PointDouble.create(x3, y3));
-        points.add(PointDouble.create(x4, y4));
-        mbr = RectangleDouble.create(Math.min(Math.min(x1, x2), Math.min(x3, x4)),
-                                     Math.min(Math.min(y1, y2), Math.min(y3, y4)),
-                                     Math.max(Math.max(x1, x2), Math.max(x3, x4)),
-                                     Math.max(Math.max(y1, y2), Math.max(y3, y4)));
+        double minX = coordinates[0];
+        double maxX = coordinates[0];
+        double minY = coordinates[1];
+        double maxY = coordinates[1];
+        for (int i = 0; i < coordinates.length - 1; i += 2) {
+            minX = Math.min(minX, coordinates[i]);
+            maxX = Math.max(maxX, coordinates[i]);
+            minY = Math.min(minY, coordinates[i + 1]);
+            maxY = Math.max(maxY, coordinates[i + 1]);
+            points.add(PointDouble.create(coordinates[i], coordinates[i + 1]));
+        }
+        mbr = RectangleDouble.create(minX, minY, maxX, maxY);
     }
 
-    public static PolygonDouble create(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        return new PolygonDouble(x1, y1, x2, y2, x3, y3, x4, y4);
+    public static PolygonDouble create(double[] coordinates) {
+        return new PolygonDouble(coordinates);
     }
 
     @Override

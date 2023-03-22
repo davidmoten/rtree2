@@ -59,8 +59,8 @@ public final class Geometries {
         return  RectangleDouble.create(x1, y1, x2, y2);
     }
 
-    public static Polygon polygon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        return PolygonDouble.create(x1, y1, x2, y2, x3, y3, x4, y4);
+    public static Polygon polygon(double[] coordinates) {
+        return PolygonDouble.create(coordinates);
     }
 
     public static Circle circle(double x, double y, double radius) {
