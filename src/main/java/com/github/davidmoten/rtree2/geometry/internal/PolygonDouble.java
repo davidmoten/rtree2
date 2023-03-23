@@ -97,9 +97,9 @@ public final class PolygonDouble implements Polygon {
             return true;
 
         for (int i = 0; i < n - 1; i++) {
-            int sign = pointsDirection(points.get(i), point, points.get(i + 1));
-            if (sign == 0) return true;
-            if (sign != firstDirection) return false;
+            int direction = pointsDirection(points.get(i), point, points.get(i + 1));
+            if (direction == 0) return true;
+            if (direction != firstDirection) return false;
         }
 
         return true;
