@@ -90,6 +90,13 @@ public final class PolygonTest {
     }
 
     @Test
+    public void testLastEdgeDoesTouchPoint() {
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE);
+        Point b = Geometries.point(0.3, -1);
+        assertTrue(a.intersects(b));
+    }
+
+    @Test
     public void testDoesNotIntersectPoint() {
         Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Point b = Geometries.point(-2.5, 3.2);
@@ -117,6 +124,34 @@ public final class PolygonTest {
     }
 
     @Test
+    public void testDoublePrecision() {
+        assertTrue(Geometries.polygon(SIMPLE_SQUARE).isDoublePrecision());
+    }
+
+    @Test
+    public void testEqualsTrue() {
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE);
+        Polygon b = Geometries.polygon(SIMPLE_SQUARE);
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    public void testEqualsFalse() {
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE);
+        Polygon b = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
+        assertNotEquals(a, b);
+        assertNotEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    public void testEqualsOtherType() {
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE);
+        Line b = Geometries.line(-1.0, -1.0, -1.0, 1.0);
+        assertNotEquals(a, b);
+    }
+
+    @Test
     public void testPolygonMbr() {
         Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Rectangle mbr = a.mbr();
@@ -124,5 +159,15 @@ public final class PolygonTest {
         assertEquals(-10, mbr.y1(), PRECISION);
         assertEquals(2, mbr.x2(), PRECISION);
         assertEquals(4, mbr.y2(), PRECISION);
+    }
+
+    @Test
+    public void testUnsupportedOperations() {
+        Polygon p = Geometries.polygon(SIMPLE_SQUARE);
+        Rectangle r = Geometries.rectangle(0, 0, 1, 1);
+        Circle c = Geometries.circle(1, 10, 5);
+        assertThrows(UnsupportedOperationException.class, () -> p.intersects(r));
+        assertThrows(UnsupportedOperationException.class, () -> p.intersects(c));
+        assertThrows(UnsupportedOperationException.class, () -> p.distance(r));
     }
 }
