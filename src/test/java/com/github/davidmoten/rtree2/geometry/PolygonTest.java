@@ -97,6 +97,26 @@ public final class PolygonTest {
     }
 
     @Test
+    public void testOddPoints() {
+        assertThrows(IllegalArgumentException.class, () -> Geometries.polygon(new double[] {1, 1, 1, 0, 0, 0, 5}));
+    }
+
+    @Test
+    public void testNotEnoughPoints() {
+        assertThrows(IllegalArgumentException.class, () -> Geometries.polygon(new double[] {1, 1, 1, 0}));
+    }
+
+    @Test
+    public void testNotEnoughPointsClosedLine() {
+        assertThrows(IllegalArgumentException.class, () -> Geometries.polygon(new double[] {1, 1, 1, 0, 1, 1}));
+    }
+
+    @Test
+    public void testNotEnoughPointsAfterDuplicates() {
+        assertThrows(IllegalArgumentException.class, () -> Geometries.polygon(new double[] {1, 1, 1, 1, 1, 0}));
+    }
+
+    @Test
     public void testPolygonMbr() {
         Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Rectangle mbr = a.mbr();
