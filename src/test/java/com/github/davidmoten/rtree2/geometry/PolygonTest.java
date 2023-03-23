@@ -8,7 +8,8 @@ public final class PolygonTest {
 
     private static final double PRECISION = 0.00001;
     private static final double[] SIMPLE_SQUARE = {-1, -1, -1, 1, 1, 1, 1, -1};
-    private static final double[] SIMPLE_SQUARE_2 = {-3, 0, 1, 4, 2, -5, -2, -10};
+    private static final double[] SIMPLE_SQUARE_CLOSED = {-1, -1, -1, 1, 1, 1, 1, -1, -1, -1};
+    private static final double[] SIMPLE_SQUARE_DUPLICATES = {-3, 0, -3, 0, -3, 0, 1, 4, 2, -5, -2, -10, -2, -10};
 
     @Test
     public void testDoesIntersectHorizontalLine() {
@@ -27,6 +28,13 @@ public final class PolygonTest {
     @Test
     public void testDoesIntersectArbitraryLine() {
         Polygon a = Geometries.polygon(SIMPLE_SQUARE);
+        Line b = Geometries.line(-1.2, 5.0, 0.5, -2.5);
+        assertTrue(a.intersects(b));
+    }
+
+    @Test
+    public void testDoesIntersectArbitraryLineClosedPolygon() {
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE_CLOSED);
         Line b = Geometries.line(-1.2, 5.0, 0.5, -2.5);
         assertTrue(a.intersects(b));
     }
@@ -69,21 +77,28 @@ public final class PolygonTest {
 
     @Test
     public void testDoesIntersectPoint() {
-        Polygon a = Geometries.polygon(SIMPLE_SQUARE_2);
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Point b = Geometries.point(0.5, 1.2);
         assertTrue(a.intersects(b));
     }
 
     @Test
+    public void testEdgeDoesTouchPoint() {
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE);
+        Point b = Geometries.point(0.5, 1.0);
+        assertTrue(a.intersects(b));
+    }
+
+    @Test
     public void testDoesNotIntersectPoint() {
-        Polygon a = Geometries.polygon(SIMPLE_SQUARE_2);
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Point b = Geometries.point(-2.5, 3.2);
         assertFalse(a.intersects(b));
     }
 
     @Test
     public void testPolygonMbr() {
-        Polygon a = Geometries.polygon(SIMPLE_SQUARE_2);
+        Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Rectangle mbr = a.mbr();
         assertEquals(-3, mbr.x1(), PRECISION);
         assertEquals(-10, mbr.y1(), PRECISION);

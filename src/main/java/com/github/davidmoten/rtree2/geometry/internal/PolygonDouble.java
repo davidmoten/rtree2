@@ -24,14 +24,23 @@ public final class PolygonDouble implements Polygon {
         double maxX = coordinates[0];
         double minY = coordinates[1];
         double maxY = coordinates[1];
-        points.add(PointDouble.create(coordinates[0], coordinates[1]));
+        PointDouble lastPoint = PointDouble.create(coordinates[0], coordinates[1]);
+        points.add(lastPoint);
         for (int i = 2; i < coordinates.length - 1; i += 2) {
+            // be nice to users and just ignore duplicate points
+            if (coordinates[i] == lastPoint.x() && coordinates[i + 1] == lastPoint.y()) continue;
             minX = Math.min(minX, coordinates[i]);
             maxX = Math.max(maxX, coordinates[i]);
             minY = Math.min(minY, coordinates[i + 1]);
             maxY = Math.max(maxY, coordinates[i + 1]);
-            points.add(PointDouble.create(coordinates[i], coordinates[i + 1]));
+            lastPoint = PointDouble.create(coordinates[i], coordinates[i + 1]);
+            points.add(lastPoint);
         }
+        // don't break if the polygon was closed
+        if (points.get(0).equals(lastPoint))
+            points.remove(points.size() - 1);
+        // final check to make sure the polygon remains valid after removing duplicates
+        if (points.size() < 3) throw new IllegalArgumentException("fewer than 3 unique polygon points provided");
         mbr = RectangleDouble.create(minX, minY, maxX, maxY);
     }
 
