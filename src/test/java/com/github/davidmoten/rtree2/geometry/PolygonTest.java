@@ -2,6 +2,7 @@ package com.github.davidmoten.rtree2.geometry;
 
 import org.junit.Test;
 
+import static com.github.davidmoten.rtree2.geometry.Intersects.geometryIntersectsPolygon;
 import static org.junit.Assert.*;
 
 public final class PolygonTest {
@@ -72,7 +73,7 @@ public final class PolygonTest {
         // Check that line is treated like a segment rather than an infinite line
         Polygon a = Geometries.polygon(SIMPLE_SQUARE);
         Line b = Geometries.line(0.5, 5.0, 0.5, 10.1);
-        assertFalse(a.intersects(b));
+        assertFalse(geometryIntersectsPolygon.test(b, a));
     }
 
     @Test
@@ -100,7 +101,7 @@ public final class PolygonTest {
     public void testDoesNotIntersectPoint() {
         Polygon a = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Point b = Geometries.point(-2.5, 3.2);
-        assertFalse(a.intersects(b));
+        assertFalse(geometryIntersectsPolygon.test(b, a));
     }
 
     @Test
@@ -166,8 +167,8 @@ public final class PolygonTest {
         Polygon p = Geometries.polygon(SIMPLE_SQUARE);
         Rectangle r = Geometries.rectangle(0, 0, 1, 1);
         Circle c = Geometries.circle(1, 10, 5);
-        assertThrows(UnsupportedOperationException.class, () -> p.intersects(r));
-        assertThrows(UnsupportedOperationException.class, () -> p.intersects(c));
+        assertThrows(UnsupportedOperationException.class, () -> geometryIntersectsPolygon.test(r, p));
+        assertThrows(UnsupportedOperationException.class, () -> geometryIntersectsPolygon.test(c, p));
         assertThrows(UnsupportedOperationException.class, () -> p.distance(r));
     }
 
