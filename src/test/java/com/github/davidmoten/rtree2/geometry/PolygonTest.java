@@ -170,4 +170,10 @@ public final class PolygonTest {
         assertThrows(UnsupportedOperationException.class, () -> p.intersects(c));
         assertThrows(UnsupportedOperationException.class, () -> p.distance(r));
     }
+
+    @Test
+    public void testConvexPolygonLimitation() {
+        assertThrows(UnsupportedOperationException.class, () ->
+                Geometries.polygon(new double[] {0, 0, 0, 1, 0.5, 0.5, 1, 1, 1, 0}));
+    }
 }

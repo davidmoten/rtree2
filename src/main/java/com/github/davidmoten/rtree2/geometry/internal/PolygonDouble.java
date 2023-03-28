@@ -6,7 +6,7 @@ import com.github.davidmoten.rtree2.internal.util.ObjectsHelper;
 import java.util.ArrayList;
 
 /**
- * A convex polygon shell.
+ * A polygon shell.
  */
 public final class PolygonDouble implements Polygon {
 
@@ -41,14 +41,18 @@ public final class PolygonDouble implements Polygon {
             points.remove(points.size() - 1);
         // final check to make sure the polygon remains valid after removing duplicates
         if (points.size() < 3) throw new IllegalArgumentException("fewer than 3 unique polygon points provided");
+        // currently the implementation is only for convex polygons
+        if (!convexPoints()) throw new UnsupportedOperationException("only implemented for convex polygons");
         mbr = RectangleDouble.create(minX, minY, maxX, maxY);
     }
 
     /**
-     * Constructor for a convex polygon shell.
+     * Constructor for a polygon shell.
      * @param coordinates An array of x1, y1, x2, y2, ... xn, yn that make the un-closed shell of a convex polygon.
      *                    As it is a polygon, at least 3 pairs of points are required (6 values).
      * @return convex polygon shell
+     * @throws IllegalArgumentException if there are not enough unique points or there is an odd amount of points
+     * @throws UnsupportedOperationException if the resulting polygon is not convex
      */
     public static PolygonDouble create(double[] coordinates) {
         return new PolygonDouble(coordinates);
@@ -102,6 +106,20 @@ public final class PolygonDouble implements Polygon {
             if (direction != firstDirection) return false;
         }
 
+        return true;
+    }
+
+    private boolean convexPoints() {
+        int n = points.size();
+        int overallDirection = 0;
+
+        for (int i = 0; i < n - 1; i++) {
+            int direction = pointsDirection(points.get(i), points.get((i + 2) % n), points.get(i + 1));
+            if (direction != 0) {
+                if (overallDirection == 0) overallDirection = direction;
+                else if (direction != overallDirection) return false;
+            }
+        }
         return true;
     }
 
