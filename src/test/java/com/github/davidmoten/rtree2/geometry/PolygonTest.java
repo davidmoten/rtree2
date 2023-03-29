@@ -165,11 +165,13 @@ public final class PolygonTest {
     @Test
     public void testUnsupportedOperations() {
         Polygon p = Geometries.polygon(SIMPLE_SQUARE);
+        Polygon p2 = Geometries.polygon(SIMPLE_SQUARE_DUPLICATES);
         Rectangle r = Geometries.rectangle(0, 0, 1, 1);
         Circle c = Geometries.circle(1, 10, 5);
         assertThrows(UnsupportedOperationException.class, () -> geometryIntersectsPolygon.test(r, p));
         assertThrows(UnsupportedOperationException.class, () -> geometryIntersectsPolygon.test(c, p));
         assertThrows(UnsupportedOperationException.class, () -> p.distance(r));
+        assertThrows(UnsupportedOperationException.class, () -> geometryIntersectsPolygon.test(p, p2));
     }
 
     @Test

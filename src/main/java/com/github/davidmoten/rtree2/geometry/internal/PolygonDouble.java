@@ -79,6 +79,11 @@ public final class PolygonDouble implements Polygon {
     }
 
     @Override
+    public boolean intersects(Polygon p) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    @Override
     public int hashCode() {
         return points.hashCode();
     }

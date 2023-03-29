@@ -8,4 +8,6 @@ public interface Polygon extends Geometry {
 
     boolean intersects(Circle circle);
 
+    boolean intersects(Polygon polygon);
+
 }
