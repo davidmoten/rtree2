@@ -1,6 +1,10 @@
 package com.github.davidmoten.rtree2.geometry.internal;
 
-import com.github.davidmoten.rtree2.geometry.*;
+import com.github.davidmoten.rtree2.geometry.Circle;
+import com.github.davidmoten.rtree2.geometry.Line;
+import com.github.davidmoten.rtree2.geometry.Point;
+import com.github.davidmoten.rtree2.geometry.Polygon;
+import com.github.davidmoten.rtree2.geometry.Rectangle;
 import com.github.davidmoten.rtree2.internal.util.ObjectsHelper;
 
 import java.util.ArrayList;
