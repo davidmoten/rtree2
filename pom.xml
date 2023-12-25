@@ -26,7 +26,7 @@
         <scm.url>scm:git:https://github.com/davidmoten/rtree2.git</scm.url>
         <slf4j.version>1.7.12</slf4j.version>
 
-        <compiler.version>3.12.0</compiler.version>
+        <compiler.version>3.12.1</compiler.version>
         <checkstyle.version>3.3.1</checkstyle.version>
         <findbugs.version>3.0.5</findbugs.version>
         <javadoc.version>3.6.3</javadoc.version>
