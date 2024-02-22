@@ -38,7 +38,7 @@
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <jmh.version>1.37</jmh.version>
-        <exec.version>3.1.1</exec.version>
+        <exec.version>3.2.0</exec.version>
         <bundle.plugin.version>5.1.9</bundle.plugin.version>
 
     </properties>
