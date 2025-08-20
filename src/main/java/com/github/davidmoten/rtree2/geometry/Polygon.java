@@ -1,14 +1,6 @@
 package com.github.davidmoten.rtree2.geometry;
 
-public interface Line extends Geometry {
-
-    double x1();
-
-    double y1();
-
-    double x2();
-
-    double y2();
+public interface Polygon extends Geometry {
 
     boolean intersects(Line b);
 

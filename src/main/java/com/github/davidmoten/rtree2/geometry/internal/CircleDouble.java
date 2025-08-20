@@ -4,6 +4,7 @@ import com.github.davidmoten.guavamini.Objects;
 import com.github.davidmoten.rtree2.geometry.Circle;
 import com.github.davidmoten.rtree2.geometry.Line;
 import com.github.davidmoten.rtree2.geometry.Point;
+import com.github.davidmoten.rtree2.geometry.Polygon;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
 import com.github.davidmoten.rtree2.internal.util.ObjectsHelper;
 
@@ -57,6 +58,11 @@ public final class CircleDouble implements Circle {
     public boolean intersects(Circle c) {
         double total = radius + c.radius();
         return GeometryUtil.distanceSquared(x, y, c.x(), c.y()) <= total * total;
+    }
+
+    @Override
+    public boolean intersects(Polygon p) {
+        return p.intersects(this);
     }
 
     @Override
