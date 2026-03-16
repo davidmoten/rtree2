@@ -5,6 +5,7 @@ import com.github.davidmoten.rtree2.geometry.Circle;
 import com.github.davidmoten.rtree2.geometry.Geometries;
 import com.github.davidmoten.rtree2.geometry.Line;
 import com.github.davidmoten.rtree2.geometry.Point;
+import com.github.davidmoten.rtree2.geometry.Polygon;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
 import com.github.davidmoten.rtree2.internal.Line2D;
 import com.github.davidmoten.rtree2.internal.RectangleUtil;
@@ -111,6 +112,11 @@ public final class LineDouble implements Line {
     @Override
     public boolean intersects(Circle circle) {
         return GeometryUtil.lineIntersects(x1, y1, x2, y2, circle);
+    }
+
+    @Override
+    public boolean intersects(Polygon p) {
+        return p.intersects(this);
     }
 
     @Override
