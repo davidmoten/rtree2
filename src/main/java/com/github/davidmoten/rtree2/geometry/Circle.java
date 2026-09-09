@@ -14,4 +14,6 @@ public interface Circle extends Geometry {
 
     boolean intersects(Line line);
 
+    boolean intersects(Polygon polygon);
+
 }

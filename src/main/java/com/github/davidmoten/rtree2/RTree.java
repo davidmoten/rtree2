@@ -22,6 +22,7 @@ import com.github.davidmoten.rtree2.geometry.HasGeometry;
 import com.github.davidmoten.rtree2.geometry.Intersects;
 import com.github.davidmoten.rtree2.geometry.Line;
 import com.github.davidmoten.rtree2.geometry.Point;
+import com.github.davidmoten.rtree2.geometry.Polygon;
 import com.github.davidmoten.rtree2.geometry.Rectangle;
 import com.github.davidmoten.rtree2.internal.Comparators;
 import com.github.davidmoten.rtree2.internal.NodeAndEntries;
@@ -672,6 +673,10 @@ public final class RTree<T, S extends Geometry> {
 
     public Iterable<Entry<T, S>> search(Circle circle) {
         return search(circle, Intersects.geometryIntersectsCircle);
+    }
+
+    public Iterable<Entry<T, S>> search(Polygon polygon) {
+        return search(polygon, Intersects.geometryIntersectsPolygon);
     }
 
     public Iterable<Entry<T, S>> search(Line line) {
