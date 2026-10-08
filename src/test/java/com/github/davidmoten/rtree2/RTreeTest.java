@@ -790,6 +790,18 @@ public class RTreeTest {
     }
 
     @Test
+    public void testSearchWithPolygonFindsPoint() {
+        RTree<Integer, Point> tree = RTree.<Integer, Point>create().add(
+                1, point(1, 1)).add(2, point(2, 2)).add(3, point(3, 3)
+        );
+        List<Entry<Integer, Point>> list = Iterables.toList(tree.search(
+                Geometries.polygon(new double[] {1.5, 1.5, 1.5, 2.5, 2.5, 2.5, 2.5, 1.5}))
+        );
+        assertEquals(1, list.size());
+        assertEquals(2, (int) list.get(0).value());
+    }
+
+    @Test
     public void testRTreeRootMbrWhenRTreeEmpty() {
         assertFalse(RTree.create().mbr().isPresent());
     }

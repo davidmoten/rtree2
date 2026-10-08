@@ -106,6 +106,27 @@ public final class Intersects {
                 return line.intersects((Point) geometry);
             else if (geometry instanceof Rectangle)
                 return line.intersects((Rectangle) geometry);
+            else if (geometry instanceof Polygon)
+                return line.intersects((Polygon) geometry);
+            else
+                throw new RuntimeException("unrecognized geometry: " + geometry);
+        }
+    };
+
+    public static final BiPredicate<Geometry, Polygon> geometryIntersectsPolygon = new BiPredicate<Geometry, Polygon>() {
+
+        @Override
+        public boolean test(Geometry geometry, Polygon polygon) {
+            if (geometry instanceof Line)
+                return polygon.intersects((Line) geometry);
+            else if (geometry instanceof Circle)
+                return polygon.intersects((Circle) geometry);
+            else if (geometry instanceof Point)
+                return polygon.intersects((Point) geometry);
+            else if (geometry instanceof Rectangle)
+                return polygon.intersects((Rectangle) geometry);
+            else if (geometry instanceof Polygon)
+                return polygon.intersects((Polygon) geometry);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }
@@ -123,6 +144,8 @@ public final class Intersects {
                 return circle.intersects((Point) geometry);
             else if (geometry instanceof Rectangle)
                 return circle.intersects((Rectangle) geometry);
+            else if (geometry instanceof Polygon)
+                return circle.intersects((Polygon) geometry);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }
@@ -147,7 +170,9 @@ public final class Intersects {
             else if (geometry instanceof Point)
                 return geometry.intersects(r);
             else if (geometry instanceof Rectangle)
-                return r.intersects((Rectangle) geometry);
+                return geometry.intersects(r);
+            else if (geometry instanceof Polygon)
+                return geometry.intersects(r);
             else
                 throw new RuntimeException("unrecognized geometry: " + geometry);
         }
